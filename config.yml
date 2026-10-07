@@ -1,0 +1,25 @@
+db:
+  name: "server_room" # db name
+  host: "127.0.0.1" # db host
+  port: 3306 # db port
+  timeout: 5s # read/write timeout
+
+app:
+  locale: "UTC" # "Europe/Moscow" # local time zone name
+  logging:
+    log_level: 1 # 1 - debug, 2 - info (default), 3 - warn, 4 - error, 5 - silent
+    log_format: "json" # ("json", "text") set log format
+  server:
+    port: 8080 # port for HTTP-server
+    shutdown_timeout: 1s # timeout to force shutdown server after receiving an OS signal
+    ssl:
+      cert: "./build/certificate.crt" # SSL-certificate file
+      key: "./build/privateKey.key" # SSL-certificate private key
+    auth:
+      access_token:
+        ttl: 5m # access JWT-token expiration duration
+        cookie:
+          path: "/" # cookie path
+          secure: true # enable cookie secure if true
+          http_only: true # enable cookie HTTP-only if true
+          same_site: "Lax" # cookie same site mode ("None", "Strict" or "Lax")

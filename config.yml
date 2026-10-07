@@ -1,8 +1,7 @@
 db:
   name: "server_room" # db name
   host: "127.0.0.1" # db host
-  port: 3306 # db port
-  timeout: 5s # read/write timeout
+  port: 27017 # db port
 
 app:
   locale: "UTC" # "Europe/Moscow" # local time zone name

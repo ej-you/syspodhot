@@ -14,10 +14,9 @@ import (
 
 var (
 	_defDB = DB{
-		Name:    "syspodhot",
-		Host:    "127.0.0.1",
-		Port:    "27017",
-		Timeout: 5 * time.Second,
+		Name: "syspodhot",
+		Host: "127.0.0.1",
+		Port: "27017",
 	}
 	_defLogging = Logging{
 		LogLevel:  2, // info
@@ -59,11 +58,10 @@ type (
 	}
 
 	DB struct {
-		Name    string        `yaml:"name"`
-		Host    string        `yaml:"host"`
-		Port    string        `yaml:"port"`
-		Timeout time.Duration `yaml:"timeout"`
-		DSN     string        `yaml:"-"`
+		Name string `yaml:"name"`
+		Host string `yaml:"host"`
+		Port string `yaml:"port"`
+		DSN  string `yaml:"-"`
 	}
 
 	App struct {
@@ -130,14 +128,8 @@ func New() (*Config, error) {
 		return nil, fmt.Errorf("token secret: %w", err)
 	}
 
-	// collect DSN string TODO: name and timeout ???
-	cfg.DB.DSN = fmt.Sprintf(
-		"mongodb://%s:%s/%s?parseTime=true&charset=utf8mb4&timeout=%s",
-		cfg.DB.Host,
-		cfg.DB.Port,
-		cfg.DB.Name,
-		cfg.DB.Timeout,
-	)
+	// collect DSN string
+	cfg.DB.DSN = fmt.Sprintf("mongodb://%s:%s/", cfg.DB.Host, cfg.DB.Port)
 	return cfg, nil
 }
 

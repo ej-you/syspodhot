@@ -1,0 +1,7 @@
+services:
+  mongo:
+    image: mongo:9.0.2-noble
+    container_name: syspodhot_mongo
+    restart: always
+    ports:
+      - "127.0.0.1:27027:27017"

@@ -4,6 +4,7 @@ package password
 import (
 	"regexp"
 
+	"github.com/howeyc/gopass"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -47,4 +48,13 @@ func Strong(password string) bool {
 		}
 	}
 	return true
+}
+
+// ScanPassword scans password from STDIN.
+func ScanPassword() (string, error) {
+	password, err := gopass.GetPasswdMasked()
+	if err != nil {
+		return "", err
+	}
+	return string(password), nil
 }

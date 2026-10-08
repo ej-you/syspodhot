@@ -9,7 +9,7 @@ import (
 	"syspodhot/internal/app/errors"
 	"syspodhot/internal/pkg/db"
 
-	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
@@ -31,7 +31,7 @@ func NewUserRepoDB(dbStorage *db.DB) *UserRepoDB {
 func (r *UserRepoDB) Create(ctx context.Context, user *entity.User) error {
 	userDTO := newUser(user)
 	// check that user with given username is not exists
-	user, err := r.GetByUsername(ctx, userDTO.Username)
+	_, err := r.GetByUsername(ctx, userDTO.Username)
 	if err == nil { // NOT err
 		return fmt.Errorf("get by username: %w", errors.ErrAlreadyExists)
 	}

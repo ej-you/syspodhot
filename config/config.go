@@ -19,7 +19,7 @@ var (
 		Port: "27017",
 	}
 	_defLogging = Logging{
-		LogLevel:  2, // info
+		LogLevel:  2, //nolint:mnd // default level (info)
 		LogFormat: "text",
 	}
 	_defCookie = Cookie{

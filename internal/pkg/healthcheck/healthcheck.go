@@ -96,7 +96,7 @@ func (h *HealthCheck) Run(ctx context.Context, errChan chan<- error) {
 	slog.Info("start healthcheck service...", "addr", addrFull, "route", h.route)
 
 	// listen port
-	listener, err := net.Listen("tcp", addr)
+	listener, err := net.Listen("tcp", addr) //nolint:noctx // ListenConfig is not necessary
 	if err != nil && !errors.Is(err, http.ErrServerClosed) {
 		errChan <- fmt.Errorf("start healthcheck listener: %w", err)
 		return

@@ -93,7 +93,7 @@ type (
 	}
 
 	AccessToken struct {
-		Secret []byte        // using SSL private key as token secret
+		Secret []byte        `json:"-"` // using SSL private key as token secret
 		TTL    time.Duration `yaml:"ttl"`
 		Cookie Cookie        `yaml:"cookie"`
 	}

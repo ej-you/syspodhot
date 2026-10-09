@@ -12,8 +12,8 @@ app:
     port: 8080 # port for HTTP-server
     shutdown_timeout: 1s # timeout to force shutdown server after receiving an OS signal
     ssl:
-      cert: "./build/certificate.crt" # SSL-certificate file
-      key: "./build/privateKey.key" # SSL-certificate private key
+      #cert: "./build/certificate.crt" # SSL-certificate file
+      key: "./build/privateKey.key" # SSL-certificate private key (also used as token secret)
     auth:
       access_token:
         ttl: 5m # access JWT-token expiration duration

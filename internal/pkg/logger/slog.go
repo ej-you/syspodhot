@@ -77,7 +77,7 @@ func InitSlog(options ...SlogOption) {
 }
 
 // WithFormat sets format for slog logger.
-// Appplies default format (text) if invalid value was given.
+// Applies default format (text) if invalid value was given.
 // Accepts values: "json", "text".
 func WithFormat(format string) SlogOption {
 	var jsonFormat bool

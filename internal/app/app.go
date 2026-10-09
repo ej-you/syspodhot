@@ -11,8 +11,10 @@ import (
 
 	"syspodhot/config"
 	"syspodhot/internal/app/service/climanager"
+	"syspodhot/internal/app/service/server"
 	"syspodhot/internal/pkg/db"
 	"syspodhot/internal/pkg/logger"
+	"syspodhot/internal/pkg/validator"
 )
 
 // Service describes app service started in parallel with other similar services.
@@ -44,32 +46,25 @@ func NewServe() (*App, error) {
 	// print out config params in debug log mode
 	slog.Debug("current config", "config", cfg)
 
-	// init sources TODO: just uncomment
-	// dbInst, err := db.New(cfg.DB.DSN, cfg.DB.Name)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("create db conn: %w", err)
-	// }
-	// // init repos
-	// climateRepoDB := repo.NewClimateRepoDB(dbInst)
-	// climateRepoCache := repo.NewClimateRepoCache(storageInst)
-	// climateRepoNtfy := repo.NewClimateRepoNtfy(ntfyClient, cfg.App.Locale, cfg.Ntfy.Theme)
-	// // init usecases
-	// climateUC := usecase.NewClimateUC(
-	// 	climateRepoCache,
-	// 	climateRepoDB,
-	// 	climateRepoNtfy,
-	// 	cfg.App.Climate.TempThreshold.Standart,
-	// 	cfg.App.Climate.TempThreshold.High,
-	// 	cfg.App.Climate.TempThreshold.Urgent,
-	// )
-
-	// healthcheckService := healthcheck.New([]healthcheck.Checking{dbInst},
-	// 	healthcheck.WithPort(cfg.App.HealthCheck.Port))
-	// climateService := service.NewClimateService(climateUC, cfg.App.CheckDBEvery)
+	// init validator
+	valid, err := validator.NewRuTagValidator()
+	if err != nil {
+		return nil, fmt.Errorf("create validator: %w", err)
+	}
+	// init sources
+	dbInst, err := db.New(cfg.DB.DSN, cfg.DB.Name)
+	if err != nil {
+		return nil, fmt.Errorf("create db conn: %w", err)
+	}
+	// init services
+	serverService, err := server.New(cfg, dbInst, valid)
+	if err != nil {
+		return nil, fmt.Errorf("init server service: %w", err)
+	}
 
 	slog.Info("init app", "status", "OK")
 	return &App{
-		// []Service{healthcheckService, climateService},
+		[]Service{serverService},
 	}, nil
 }
 

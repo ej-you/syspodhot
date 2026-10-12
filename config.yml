@@ -1,5 +1,5 @@
 db:
-  name: "server_room" # db name
+  name: "syspodhot" # db name
   host: "127.0.0.1" # db host
   port: 27027 # db port
 

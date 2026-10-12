@@ -48,15 +48,6 @@ func (r *UserRepoDB) Create(ctx context.Context, user *entity.User) error {
 	return nil
 }
 
-// GetByID returns user with given ID.
-func (r *UserRepoDB) GetByID(ctx context.Context, id int) (*entity.User, error) {
-	user, err := r.getOneWithFilter(ctx, bson.M{"_id": id})
-	if err != nil {
-		return nil, fmt.Errorf("get by id: %w", err)
-	}
-	return user, nil
-}
-
 // GetByUsername returns user with given username.
 func (r *UserRepoDB) GetByUsername(ctx context.Context, username string) (*entity.User, error) {
 	user, err := r.getOneWithFilter(ctx, bson.M{"username": username})

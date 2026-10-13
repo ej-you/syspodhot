@@ -2,7 +2,6 @@ package v1
 
 import (
 	"fmt"
-	"log/slog"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -51,8 +50,6 @@ func (c *ControllerClient) Album(ctx *fiber.Ctx) error {
 	if err != nil {
 		return fmt.Errorf("get album by id: %w", err)
 	}
-
-	slog.Debug("album page", "album", album)
 
 	return ctx.Render("album", fiber.Map{
 		"album": album,

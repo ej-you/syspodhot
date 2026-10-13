@@ -17,6 +17,8 @@ import (
 
 var _collectionAlbum = (album{}).collectionName()
 
+var _idField = "_id" // id field name in mongodb
+
 // AlbumRepoDB represents an album DB repo.
 type AlbumRepoDB struct {
 	dbStorage *db.DB
@@ -48,7 +50,7 @@ func (r *AlbumRepoDB) GetByID(ctx context.Context, id uuid.UUID) (*entity.Album,
 
 	err := r.dbStorage.
 		Collection(_collectionAlbum).
-		FindOne(ctx, bson.M{"_id": id}).
+		FindOne(ctx, bson.M{_idField: id}).
 		Decode(album)
 	if goerrors.Is(err, mongo.ErrNoDocuments) {
 		return nil, errors.ErrNotFound
@@ -87,7 +89,7 @@ func (r *AlbumRepoDB) UpdateFull(ctx context.Context, album *entity.Album) error
 
 	result, err := r.dbStorage.
 		Collection(_collectionAlbum).
-		ReplaceOne(ctx, bson.M{"_id": albumDTO.ID}, albumDTO)
+		ReplaceOne(ctx, bson.M{_idField: albumDTO.ID}, albumDTO)
 	if err != nil {
 		return err
 	}
@@ -103,7 +105,7 @@ func (r *AlbumRepoDB) DeleteByID(ctx context.Context, id uuid.UUID) error {
 
 	err := r.dbStorage.
 		Collection(_collectionAlbum).
-		FindOneAndDelete(ctx, bson.M{"_id": id}).
+		FindOneAndDelete(ctx, bson.M{_idField: id}).
 		Decode(album)
 	if goerrors.Is(err, mongo.ErrNoDocuments) {
 		return errors.ErrNotFound

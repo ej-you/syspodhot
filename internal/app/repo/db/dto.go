@@ -14,7 +14,13 @@ type album struct {
 	Type       string    `bson:"type"`
 	Annotation string    `bson:"annotation"`
 	ReleasedAt time.Time `bson:"released_at"`
+	Streaming  streaming `bson:"streaming"`
 	Songs      []song    `bson:"songs"`
+}
+
+type streaming struct {
+	VKLink     string `json:"vk"`
+	YandexLink string `json:"yandex"`
 }
 
 type song struct {
@@ -31,7 +37,11 @@ func newAlbum(albumInst *entity.Album) *album {
 		Type:       albumInst.Type,
 		Annotation: albumInst.Annotation,
 		ReleasedAt: albumInst.ReleasedAt,
-		Songs:      make([]song, len(albumInst.Songs)),
+		Streaming: streaming{
+			VKLink:     albumInst.Streaming.VKLink,
+			YandexLink: albumInst.Streaming.YandexLink,
+		},
+		Songs: make([]song, len(albumInst.Songs)),
 	}
 	for idx, entitySong := range albumInst.Songs {
 		dto.Songs[idx] = song{
@@ -51,7 +61,11 @@ func (a *album) toEntity() *entity.Album {
 		Type:       a.Type,
 		Annotation: a.Annotation,
 		ReleasedAt: a.ReleasedAt,
-		Songs:      make([]entity.Song, len(a.Songs)),
+		Streaming: entity.Streaming{
+			VKLink:     a.Streaming.VKLink,
+			YandexLink: a.Streaming.YandexLink,
+		},
+		Songs: make([]entity.Song, len(a.Songs)),
 	}
 	for idx, entitySong := range a.Songs {
 		inst.Songs[idx] = entity.Song{

@@ -26,6 +26,10 @@ func TestAlbum_Create(t *testing.T) {
 		Type:       "альбом",
 		Annotation: "Карты, деньги, два ствола",
 		ReleasedAt: time.Now(),
+		Streaming: entity.Streaming{
+			VKLink:     "#",
+			YandexLink: "#",
+		},
 		Songs: []entity.Song{
 			{
 				ID:       uuid.New(),
@@ -75,8 +79,15 @@ func TestAlbum_UpdateFull(t *testing.T) {
 
 	album := &entity.Album{
 		ID:         uuid.MustParse("32922206-3abd-48e7-8ab9-e08861ed7b61"),
+		Photo:      "file:///home/test/test.png",
 		Title:      "РичарТ",
+		Type:       "альбом",
 		Annotation: "Королевская классика",
+		ReleasedAt: time.Now(),
+		Streaming: entity.Streaming{
+			VKLink:     "#",
+			YandexLink: "#",
+		},
 		Songs: []entity.Song{
 			{
 				ID:       uuid.New(),
@@ -93,6 +104,15 @@ func TestAlbum_UpdateFull(t *testing.T) {
 
 	err = repo.UpdateFull(context.Background(), album)
 	require.NoError(t, err, "update album")
+}
+
+func TestAlbum_Delete(t *testing.T) {
+	repo, err := testAlbumRepo()
+	require.NoError(t, err, "create album repo")
+
+	id := uuid.MustParse("c82649cb-80b0-4605-9ea5-98c9a6689d98")
+	err = repo.DeleteByID(context.Background(), id)
+	require.NoError(t, err, "delete album")
 }
 
 func testAlbumRepo() (*AlbumRepoDB, error) {

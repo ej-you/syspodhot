@@ -37,7 +37,7 @@ func (r *AlbumRepoDB) Create(ctx context.Context, album *entity.Album) error {
 		Collection(_collectionAlbum).
 		InsertOne(ctx, albumDTO)
 	if err != nil {
-		return fmt.Errorf("insert: %w", err)
+		return err
 	}
 	return nil
 }
@@ -98,11 +98,11 @@ func (r *AlbumRepoDB) UpdateFull(ctx context.Context, album *entity.Album) error
 }
 
 // DeleteByID deletes album with given ID.
-func (r *UserRepoDB) DeleteByID(ctx context.Context, id uuid.UUID) error {
+func (r *AlbumRepoDB) DeleteByID(ctx context.Context, id uuid.UUID) error {
 	album := &album{}
 
 	err := r.dbStorage.
-		Collection(_collectionUser).
+		Collection(_collectionAlbum).
 		FindOneAndDelete(ctx, bson.M{"_id": id}).
 		Decode(album)
 	if goerrors.Is(err, mongo.ErrNoDocuments) {

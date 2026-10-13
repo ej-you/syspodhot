@@ -50,11 +50,19 @@ func (r *UserRepoDB) Create(ctx context.Context, user *entity.User) error {
 
 // GetByUsername returns user with given username.
 func (r *UserRepoDB) GetByUsername(ctx context.Context, username string) (*entity.User, error) {
-	user, err := r.getOneWithFilter(ctx, bson.M{"username": username})
-	if err != nil {
-		return nil, fmt.Errorf("get by username: %w", err)
+	user := &user{}
+
+	err := r.dbStorage.
+		Collection(_collectionUser).
+		FindOne(ctx, bson.M{"username": username}).
+		Decode(user)
+	if goerrors.Is(err, mongo.ErrNoDocuments) {
+		return nil, errors.ErrNotFound
 	}
-	return user, nil
+	if err != nil {
+		return nil, err
+	}
+	return user.toEntity(), nil
 }
 
 // GetAll returns all users.
@@ -90,20 +98,4 @@ func (r *UserRepoDB) DeleteByUsername(ctx context.Context, username string) erro
 		return errors.ErrNotFound
 	}
 	return err // err OR nil
-}
-
-func (r *UserRepoDB) getOneWithFilter(ctx context.Context, filter any) (*entity.User, error) {
-	user := &user{}
-
-	err := r.dbStorage.
-		Collection(_collectionUser).
-		FindOne(ctx, filter).
-		Decode(user)
-	if goerrors.Is(err, mongo.ErrNoDocuments) {
-		return nil, errors.ErrNotFound
-	}
-	if err != nil {
-		return nil, err
-	}
-	return user.toEntity(), nil
 }

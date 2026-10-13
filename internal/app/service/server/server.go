@@ -55,8 +55,7 @@ func New(cfg *config.Config, dbStorage *db.DB, valid validator.Validator) (*Serv
 	hcInst := healthcheck.New([]healthcheck.Checking{dbStorage})
 	server.fiberApp.Get("/health", adaptor.HTTPHandlerFunc(hcInst.HealthHanlder))
 	// register all endpoints
-	// TODO: uncomment
-	// server.registerEndpointsV1(cfg, dbStorage, valid)
+	server.registerEndpointsV1(cfg, dbStorage, valid)
 
 	return server, nil
 }

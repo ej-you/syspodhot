@@ -81,6 +81,45 @@ func (album) collectionName() string {
 	return "albums"
 }
 
+type concert struct {
+	ID         uuid.UUID `bson:"_id"`
+	Title      string    `bson:"title"`
+	Place      string    `bson:"place"`
+	Datetime   time.Time `bson:"datetime"`
+	TicketLink string    `bson:"ticket_link"`
+
+	Photos []string `json:"photos"`
+	Video  string   `json:"video"`
+}
+
+func newConcert(concertInst *entity.Concert) *concert {
+	return &concert{
+		ID:         concertInst.ID,
+		Title:      concertInst.Title,
+		Place:      concertInst.Place,
+		Datetime:   concertInst.Datetime,
+		TicketLink: concertInst.TicketLink,
+		Photos:     concertInst.Photos,
+		Video:      concertInst.Video,
+	}
+}
+
+func (c *concert) toEntity() *entity.Concert {
+	return &entity.Concert{
+		ID:         c.ID,
+		Title:      c.Title,
+		Place:      c.Place,
+		Datetime:   c.Datetime,
+		TicketLink: c.TicketLink,
+		Photos:     c.Photos,
+		Video:      c.Video,
+	}
+}
+
+func (concert) collectionName() string {
+	return "concerts"
+}
+
 type user struct {
 	ID       uuid.UUID `bson:"_id"`
 	Username string    `bson:"username"`

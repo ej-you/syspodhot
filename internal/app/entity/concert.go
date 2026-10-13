@@ -7,7 +7,7 @@ import (
 	"syspodhot/internal/pkg/utils/timefmt"
 )
 
-const _concertTimeFmt = "15:04"
+const _concertTimeFmt = "15:04" // HH:mm
 
 // Concert represents a coming/past music concert.
 type Concert struct {

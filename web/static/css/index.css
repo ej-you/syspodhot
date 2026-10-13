@@ -359,6 +359,16 @@ a {
 
 /* ---------- Выступления: билеты ---------- */
 
+.tickets--empty {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(2.5rem, 6vw, 5rem);
+
+  color: var(--accent);
+  font: 700 clamp(1.25rem, 3vw, 2.25rem) / 1.1 var(--font-display);
+  letter-spacing: -0.03em;
+}
+
 .tickets {
   display: grid;
   gap: 1.5rem;

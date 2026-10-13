@@ -28,7 +28,7 @@ func (c *Concert) DatetimeH() string {
 
 // DatetimeH returns concert month like "января".
 func (c *Concert) Month() string {
-	return timefmt.FmtRuWeekDay(c.Datetime)
+	return timefmt.FmtRuMonth(c.Datetime)
 }
 
 // DatetimeH returns concert day of month.

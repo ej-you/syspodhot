@@ -11,19 +11,21 @@ import (
 
 // ControllerClient represents an http-controller for client cases.
 type ControllerClient struct {
-	userUC  *usecase.UserUC
-	albumUC *usecase.AlbumUC
-	valid   validator.Validator
+	userUC    *usecase.UserUC
+	albumUC   *usecase.AlbumUC
+	concertUC *usecase.ConcertUC
+	valid     validator.Validator
 }
 
 // NewControllerClient returns a new instance of ControllerClient.
-func NewControllerClient(albumUC *usecase.AlbumUC, userUC *usecase.UserUC,
-	valid validator.Validator) *ControllerClient {
+func NewControllerClient(userUC *usecase.UserUC, albumUC *usecase.AlbumUC,
+	concertUC *usecase.ConcertUC, valid validator.Validator) *ControllerClient {
 
 	return &ControllerClient{
-		userUC:  userUC,
-		albumUC: albumUC,
-		valid:   valid,
+		userUC:    userUC,
+		albumUC:   albumUC,
+		concertUC: concertUC,
+		valid:     valid,
 	}
 }
 
@@ -34,8 +36,14 @@ func (c *ControllerClient) Index(ctx *fiber.Ctx) error {
 		return fmt.Errorf("get all albums: %w", err)
 	}
 
+	concerts, err := c.concertUC.GetComming()
+	if err != nil {
+		return fmt.Errorf("get comming concerts: %w", err)
+	}
+
 	return ctx.Render("index", fiber.Map{
-		"albums": albums,
+		"albums":   albums,
+		"concerts": concerts,
 	})
 }
 

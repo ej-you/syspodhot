@@ -63,35 +63,27 @@
           <a class="text-link" href="/concerts">Все выступления</a>
         </div>
 
+        {{ if eq (len .concerts) 0 }}
+        <h3 class="tickets--empty">Следите за новостями</h3>
+        {{ else }}
         <ul class="tickets">
+          {{ range .concerts }}
           <li class="ticket">
-            <time class="ticket__date" datetime="2026-10-24T20:00">
-              <span class="ticket__day">24</span>
-              <span class="ticket__month">октября</span>
-              <span class="ticket__weekday">суббота</span>
+            <time class="ticket__date" datetime="{{ .Datetime }}">
+              <span class="ticket__day">{{ .Day }}</span>
+              <span class="ticket__month">{{ .Month }}</span>
+              <span class="ticket__weekday">{{ .WeekDay }}</span>
             </time>
             <div class="ticket__main">
-              <h3 class="ticket__title">Презентация альбома «Сны в зазеркалье»</h3>
-              <p class="ticket__place">Москва, клуб «Ритм»</p>
-              <p class="ticket__time">Начало в 20:00</p>
+              <h3 class="ticket__title">{{ .Title }}</h3>
+              <p class="ticket__place">{{ .Place }}</p>
+              <p class="ticket__time">Начало в {{ .Time }}</p>
             </div>
-            <a class="btn btn--primary ticket__buy" href="#">Купить билет</a>
+            <a class="btn btn--primary ticket__buy" href="{{ .TicketLink }}">Купить билет</a>
           </li>
-
-          <li class="ticket">
-            <time class="ticket__date" datetime="2026-11-14T19:00">
-              <span class="ticket__day">14</span>
-              <span class="ticket__month">ноября</span>
-              <span class="ticket__weekday">суббота</span>
-            </time>
-            <div class="ticket__main">
-              <h3 class="ticket__title">Сольный концерт</h3>
-              <p class="ticket__place">Санкт-Петербург, клуб «Подвал»</p>
-              <p class="ticket__time">Начало в 19:00</p>
-            </div>
-            <a class="btn btn--primary ticket__buy" href="#">Купить билет</a>
-          </li>
+          {{ end }}
         </ul>
+        {{ end }}
       </div>
     </section>
 

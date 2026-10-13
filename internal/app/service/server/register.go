@@ -19,11 +19,13 @@ func (s *Server) registerEndpointsV1(cfg *config.Config, dbStorage *db.DB,
 	// create repos
 	userRepoDB := repodb.NewUserRepoDB(dbStorage)
 	albumRepoDB := repodb.NewAlbumRepoDB(dbStorage)
+	concertRepoDB := repodb.NewConcertRepoDB(dbStorage)
 	// create usecases
 	userUC := usecase.NewUserUC(userRepoDB)
 	albumUC := usecase.NewAlbumUC(albumRepoDB)
+	concertUC := usecase.NewConcertUC(concertRepoDB)
 	// create controllers
-	controllerClient := httpv1.NewControllerClient(albumUC, userUC, valid)
+	controllerClient := httpv1.NewControllerClient(userUC, albumUC, concertUC, valid)
 
 	// // middlewares
 	// loginRequired := middleware.LoginRequired()

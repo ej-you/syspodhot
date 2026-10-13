@@ -1,0 +1,713 @@
+/* Системный Подход: главная страница
+
+   Палитра взята с заставки и обложки альбома:
+   --bg       глубокий индиго, верх неба на заставке
+   --surface  индиго чуть светлее, для чередования секций
+   --text     белый, как логотип
+   --muted    приглушённый сиреневый для второстепенного текста
+   --accent   закатный коралл, низ неба на заставке
+*/
+
+:root {
+  --bg: #120f26;
+  --surface: #1e1640;
+  --text: #f7f2f1;
+  --muted: #b9aecb;
+  --dark-accent: #3c2537;
+  --accent: #f0603f;
+  --ink: #120f26;
+  --line: rgba(247, 242, 241, 0.18);
+
+  --font-display: "Unbounded", "Arial Black", "Segoe UI", sans-serif;
+  --font-body: "Golos Text", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+
+  --pad: clamp(1.25rem, 4.5vw, 4rem);
+  --header-h: 72px;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-h);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 400 1.0625rem/1.6 var(--font-body);
+}
+
+/* Ссылки наследуют цвет текста, в том числе посещённые */
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.wrap {
+  max-width: 2000px;
+  margin-inline: auto;
+  padding-inline: var(--pad);
+}
+
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  padding: 0.7rem 1rem;
+  background: var(--accent);
+  color: var(--ink);
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.skip:focus {
+  top: 1rem;
+}
+
+/* ---------- Кнопки и ссылки ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9em 1.6em;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  font: 600 1rem/1.2 var(--font-body);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.btn--primary:hover {
+  background: var(--text);
+}
+
+.btn--dark {
+  background: var(--ink);
+  color: var(--text);
+}
+
+.btn--dark:hover {
+  background: var(--text);
+  color: var(--ink);
+}
+
+.text-link {
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.3em;
+}
+
+.text-link:hover {
+  color: var(--accent);
+}
+
+/* ---------- Шапка ---------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--header-h);
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.logo {
+  font: 700 clamp(0.95rem, 3.6vw, 1.125rem)/1 var(--font-display);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.nav ul {
+  display: flex;
+  gap: 1.75rem;
+}
+
+.nav a {
+  font-weight: 500;
+  text-decoration: none;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.35em;
+}
+
+.nav a:hover {
+  text-decoration-line: underline;
+}
+
+.nav-toggle {
+  display: none;
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  position: absolute;
+  left: 11px;
+  right: 11px;
+  height: 2px;
+  background: currentColor;
+  transition: top 0.2s, transform 0.2s;
+}
+
+.nav-toggle span:first-child {
+  top: 17px;
+}
+
+.nav-toggle span:last-child {
+  top: 25px;
+}
+
+.is-open .nav-toggle span:first-child {
+  top: 21px;
+  transform: rotate(45deg);
+}
+
+.is-open .nav-toggle span:last-child {
+  top: 21px;
+  transform: rotate(-45deg);
+}
+
+/* ---------- Заставка: картинка с мягкой тенью ---------- */
+
+.hero {
+  padding-top: clamp(1rem, 2.5vw, 2rem);
+}
+
+.hero__title {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+/* На телефонах картинка целиком (квадрат), чтобы не обрезать логотип.
+   Тень под картинкой: она слегка парит над фоном */
+.hero__img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow:
+    0 32px 64px -24px rgba(0, 0, 0, 0.75),
+    0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+/* На широких экранах кадрируем по центру: логотип остаётся в кадре */
+@media (min-width: 861px) {
+  .hero__img {
+    aspect-ratio: 16 / 10;
+    max-height: calc(100svh - var(--header-h) - 4rem);
+    object-position: center 10%;
+  }
+}
+
+/* ---------- Секции ---------- */
+
+.section {
+  padding-block: clamp(3.5rem, 8vw, 7rem);
+}
+
+.section--alt {
+  background: var(--surface);
+}
+
+.section__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: clamp(1.5rem, 4vw, 3rem);
+}
+
+.section__title {
+  font: 700 clamp(1.75rem, 4vw, 3rem)/1.1 var(--font-display);
+  letter-spacing: -0.03em;
+}
+
+/* ---------- Альбом: пластинка выезжает при наведении ---------- */
+
+.album {
+  --size: clamp(150px, 24vw, 280px);
+  display: grid;
+  grid-template-columns: calc(var(--size) * 1.3) minmax(0, 1fr);
+  gap: clamp(1.25rem, 4vw, 3rem);
+  align-items: center;
+}
+
+/* Между альбомами тонкая линия */
+.album+.album {
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+  padding-top: clamp(2rem, 5vw, 3.5rem);
+  border-top: 1px solid var(--line);
+}
+
+.album__art {
+  position: relative;
+  display: block;
+  width: calc(var(--size) * 1.3);
+  height: var(--size);
+}
+
+.album__cover {
+  position: relative;
+  z-index: 2;
+  width: var(--size);
+  height: var(--size);
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+}
+
+.album__disc {
+  position: absolute;
+  z-index: 1;
+  top: calc(var(--size) * 0.04);
+  left: calc(var(--size) * 0.04);
+  width: calc(var(--size) * 0.92);
+  height: calc(var(--size) * 0.92);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, var(--bg) 0 2.5%, var(--accent) 2.5% 16%, transparent 16%),
+    conic-gradient(from 20deg, transparent 0 20%, rgba(255, 255, 255, 0.14) 25%, transparent 30% 70%, rgba(255, 255, 255, 0.14) 75%, transparent 80%),
+    repeating-radial-gradient(circle, #312967 0 3px, #151130 3px 6px);
+  box-shadow:
+    0 0 0 1px rgba(247, 242, 241, 0.22),
+    0 8px 24px rgba(0, 0, 0, 0.5);
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.album__art:hover .album__disc {
+  transform: translateX(34%) rotate(200deg);
+}
+
+/* На сенсорных экранах наведения нет: пластинка просто выглядывает */
+@media (hover: none) {
+  .album__disc {
+    transform: translateX(34%) rotate(200deg);
+  }
+}
+
+.album__type {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  padding: 0.15em 0.85em;
+  border: 1.5px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.album__title {
+  margin: 0 0 1.5rem;
+  font: 700 clamp(1.75rem, 4vw, 3rem)/1.1 var(--font-display);
+  letter-spacing: -0.03em;
+}
+
+.album__title a {
+  text-decoration: none;
+}
+
+.album__title a:hover {
+  color: var(--accent);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 2.5rem;
+  margin: 0 0 2rem;
+  padding: 1.25rem 0;
+  border-block: 1px solid var(--line);
+}
+
+.facts dt {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.facts dd {
+  margin: 0.2rem 0 0;
+  font: 600 1.125rem/1.3 var(--font-display);
+}
+
+/* ---------- Выступления: билеты ---------- */
+
+.tickets {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.ticket {
+  --stub: 9rem;
+  --notch: 1.5rem;
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--stub) minmax(0, 1fr) auto;
+  align-items: stretch;
+  background: var(--surface);
+  border-radius: 6px;
+}
+
+/* Вырезы на линии отрыва */
+.ticket::before,
+.ticket::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--stub) - var(--notch) / 2);
+  width: var(--notch);
+  height: var(--notch);
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+.ticket::before {
+  top: calc(var(--notch) / -2);
+}
+
+.ticket::after {
+  bottom: calc(var(--notch) / -2);
+}
+
+.ticket__date {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 0.75rem;
+  background: var(--accent);
+  color: var(--ink);
+  border-radius: 6px 0 0 6px;
+  text-align: center;
+}
+
+/* Линия отрыва */
+.ticket__date::after {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  bottom: 1rem;
+  right: 0;
+  border-right: 2px dashed var(--ink);
+  opacity: 0.45;
+}
+
+.ticket__day {
+  font: 700 3rem/1 var(--font-display);
+  letter-spacing: -0.04em;
+}
+
+.ticket__month {
+  margin-top: 0.35rem;
+  font-weight: 600;
+}
+
+.ticket__weekday {
+  font-size: 0.9375rem;
+}
+
+.ticket__main {
+  padding: 1.25rem clamp(1.25rem, 3vw, 2rem);
+}
+
+.ticket__title {
+  margin: 0 0 0.5rem;
+  font: 600 clamp(1.125rem, 2.2vw, 1.5rem)/1.25 var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.ticket__place {
+  font-weight: 500;
+}
+
+.ticket__time {
+  margin-top: 0.15rem;
+  color: var(--muted);
+}
+
+.ticket__buy {
+  align-self: center;
+  margin-right: clamp(1.25rem, 3vw, 2rem);
+}
+
+/* ---------- Участники ---------- */
+
+/* Колонки рассчитаны на 6 участников: 2, 3 или 6 в ряд */
+.members {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 1.25rem;
+}
+
+@media (min-width: 600px) {
+  .members {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem 1.5rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  .members {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+/* Вместо фото: абстрактная «пластинка» с инициалами.
+   Вариант плитки зависит от порядка в списке, данных для него не нужно. */
+.member__art {
+  --tile: #241a4a;
+  --ring: #33286b;
+  --label: var(--accent);
+  --cx: 50%;
+  --cy: 46%;
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--tile);
+}
+
+/* Бороздки */
+.member__art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-radial-gradient(circle at var(--cx) var(--cy), transparent 0 9px, var(--ring) 9px 11px);
+}
+
+/* Этикетка с инициалами */
+.member__label {
+  position: absolute;
+  left: var(--cx);
+  top: var(--cy);
+  display: grid;
+  place-items: center;
+  width: 38%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--label);
+  color: var(--ink);
+  font: 700 clamp(1rem, 2.4vw, 1.5rem)/1 var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.member:nth-child(6n + 2) .member__art {
+  --tile: #2a1830;
+  --ring: #3d2240;
+  --label: var(--text);
+  --cx: 32%;
+  --cy: 40%;
+}
+
+.member:nth-child(6n + 3) .member__art {
+  --tile: #1e1640;
+  --ring: #2b2158;
+  --label: var(--muted);
+  --cx: 68%;
+  --cy: 56%;
+}
+
+.member:nth-child(6n + 4) .member__art {
+  --tile: #3a1c2e;
+  --ring: #4d2438;
+  --label: #dc6a54;
+  --cx: 44%;
+  --cy: 64%;
+}
+
+.member:nth-child(6n + 5) .member__art {
+  --tile: #241a4a;
+  --ring: #33286b;
+  --label: var(--accent);
+  --cx: 64%;
+  --cy: 34%;
+}
+
+.member:nth-child(6n) .member__art {
+  --tile: #2a1830;
+  --ring: #3d2240;
+  --label: var(--text);
+  --cx: 36%;
+  --cy: 50%;
+}
+
+.member__name {
+  margin: 1rem 0 0.15rem;
+  font: 600 1rem/1.3 var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.member__role {
+  color: var(--muted);
+}
+
+/* ---------- Контакты ---------- */
+
+.contacts {
+  background: var(--dark-accent);
+  color: var(--muted);
+  text-align: center;
+}
+
+.contacts :focus-visible {
+  outline-color: var(--ink);
+}
+
+.contacts__note {
+  max-width: 34rem;
+  margin: 1.25rem auto 0;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.contacts__mail {
+  display: inline-block;
+  margin: 0.75rem 0 2rem;
+  font: 700 clamp(1.4rem, 5.2vw, 3.75rem)/1.15 var(--font-display);
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.2em;
+}
+
+.contacts__mail:hover {
+  text-decoration-color: transparent;
+}
+
+.contacts__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+/* ---------- Подвал ---------- */
+
+.site-footer {
+  padding-block: 2rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+}
+
+.site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.site-footer a {
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 0.3em;
+}
+
+.site-footer a:hover {
+  color: var(--text);
+  text-decoration-color: var(--accent);
+}
+
+/* ---------- Адаптив ---------- */
+
+@media (max-width: 860px) {
+  .nav-toggle {
+    display: block;
+  }
+
+  .js .nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 0.5rem var(--pad) 1.5rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .js .is-open .nav {
+    display: block;
+  }
+
+  .nav ul {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .nav a {
+    display: block;
+    padding: 0.9rem 0;
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .album {
+    --size: min(60vw, 260px);
+    grid-template-columns: 1fr;
+  }
+
+  .ticket {
+    --stub: 6.5rem;
+    grid-template-columns: var(--stub) minmax(0, 1fr);
+  }
+
+  .ticket__date {
+    grid-row: 1 / span 2;
+  }
+
+  .ticket__day {
+    font-size: 2.25rem;
+  }
+
+  .ticket__buy {
+    grid-column: 2;
+    justify-self: start;
+    margin: 0 1.25rem 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .album__disc {
+    transition: none;
+  }
+}

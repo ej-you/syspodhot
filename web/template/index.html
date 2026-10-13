@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Системный Подход: официальный сайт рок-группы</title>
+  <meta name="description" content="Музыка, ближайшие выступления и контакты рок-группы «Системный Подход».">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Системный Подход">
+  <meta property="og:description" content="Альбом «Сны в зазеркалье», ближайшие выступления и контакты.">
+  <meta property="og:image" content="/static/img/main_picture.png">
+
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23120f26'/><circle cx='16' cy='16' r='9' fill='%23f0603f'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/reset.css">
+  <link rel="stylesheet" href="/static/css/index.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+
+<body>
+  <a class="skip" href="#main">К содержимому</a>
+
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="logo" href="#top">Системный Подход</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
+        <span></span><span></span>
+      </button>
+      <nav class="nav" id="nav" aria-label="Основное меню">
+        <ul>
+          <li><a href="/concerts">Выступления</a></li>
+          <li><a href="#music">Музыка</a></li>
+          <li><a href="#members">Участники</a></li>
+          <li><a href="#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <section class="hero" id="top">
+      <div class="wrap">
+        <h1 class="hero__title">
+          <img class="hero__img" src="/static/img/main.webp" alt="Системный Подход, рок-группа" width="1080"
+            height="1080">
+        </h1>
+      </div>
+    </section>
+
+    <section class="section" id="concerts" aria-labelledby="concerts-title">
+      <div class="wrap">
+        <div class="section__head">
+          <h2 class="section__title" id="concerts-title">Ближайшие выступления</h2>
+          <a class="text-link" href="/concerts">Все выступления</a>
+        </div>
+
+        <ul class="tickets">
+          <li class="ticket">
+            <time class="ticket__date" datetime="2026-10-24T20:00">
+              <span class="ticket__day">24</span>
+              <span class="ticket__month">октября</span>
+              <span class="ticket__weekday">суббота</span>
+            </time>
+            <div class="ticket__main">
+              <h3 class="ticket__title">Презентация альбома «Сны в зазеркалье»</h3>
+              <p class="ticket__place">Москва, клуб «Ритм»</p>
+              <p class="ticket__time">Начало в 20:00</p>
+            </div>
+            <a class="btn btn--primary ticket__buy" href="#">Купить билет</a>
+          </li>
+
+          <li class="ticket">
+            <time class="ticket__date" datetime="2026-11-14T19:00">
+              <span class="ticket__day">14</span>
+              <span class="ticket__month">ноября</span>
+              <span class="ticket__weekday">суббота</span>
+            </time>
+            <div class="ticket__main">
+              <h3 class="ticket__title">Сольный концерт</h3>
+              <p class="ticket__place">Санкт-Петербург, клуб «Подвал»</p>
+              <p class="ticket__time">Начало в 19:00</p>
+            </div>
+            <a class="btn btn--primary ticket__buy" href="#">Купить билет</a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="music" aria-labelledby="music-title">
+      <div class="wrap">
+        <div class="section__head">
+          <h2 class="section__title" id="music-title">Музыка</h2>
+        </div>
+
+        <div class="albums">
+          {{ range .albums }}
+          <article class="album">
+            <a class="album__art" href="/album/{{ .ID }}" tabindex="-1" aria-hidden="true">
+              <span class="album__disc"></span>
+              <!-- TODO: cover from backend -->
+              <img class="album__cover" src="/static/img/album_cover.webp" alt="" width="3000" height="3000"
+                loading="lazy">
+            </a>
+            <div class="album__body">
+              <p class="album__type">{{ .Type }}</p>
+              <h3 class="album__title"><a href="/album/{{ .ID }}">{{ .Title }}</a></h3>
+              <dl class="facts">
+                <div>
+                  <dt>Дата выхода</dt>
+                  <dd><time datetime="{{ .ReleasedAt }}">{{ .ReleasedAtH }}</time></dd>
+                </div>
+                <div>
+                  <dt>Песен</dt>
+                  <dd>{{ len .Songs }}</dd>
+                </div>
+                <div>
+                  <dt>Длительность</dt>
+                  <dd>{{ .TotalDuration }}</dd>
+                </div>
+              </dl>
+              <a class="btn btn--primary" href="/album/{{ .ID }}">Подробнее</a>
+            </div>
+          </article>
+          {{ end }}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="members" aria-labelledby="members-title">
+      <div class="wrap">
+        <div class="section__head">
+          <h2 class="section__title" id="members-title">Участники</h2>
+        </div>
+
+        <ul class="members">
+          <li class="member">
+            <div class="member__art" aria-hidden="true"><span class="member__label">ЮЮ</span></div>
+            <h3 class="member__name">Юрий Юрасов</h3>
+            <p class="member__role">Вокал</p>
+          </li>
+          <li class="member">
+            <div class="member__art" aria-hidden="true"><span class="member__label">ЕК</span></div>
+            <h3 class="member__name">Евгений Климов</h3>
+            <p class="member__role">Гитара</p>
+          </li>
+          <li class="member">
+            <div class="member__art" aria-hidden="true"><span class="member__label">АК</span></div>
+            <h3 class="member__name">Александр Котов</h3>
+            <p class="member__role">Бас-гитара</p>
+          </li>
+          <li class="member">
+            <div class="member__art" aria-hidden="true"><span class="member__label">РК</span></div>
+            <h3 class="member__name">Роман Клевцов</h3>
+            <p class="member__role">Ударные</p>
+          </li>
+          <li class="member">
+            <div class="member__art" aria-hidden="true"><span class="member__label">ДД</span></div>
+            <h3 class="member__name">Даниил Дудков</h3>
+            <p class="member__role">Гитара</p>
+          </li>
+          <li class="member">
+            <div class="member__art" aria-hidden="true"><span class="member__label">СВ</span></div>
+            <h3 class="member__name">Сергей Видмак</h3>
+            <p class="member__role">Клавишные</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Контакты -->
+    <section class="section contacts" id="contacts" aria-labelledby="contacts-title">
+      <div class="wrap">
+        <h2 class="section__title" id="contacts-title">Контакты</h2>
+        <p class="contacts__note">По вопросам концертов, съёмок и сотрудничества пишите на почту.</p>
+        <a class="contacts__mail" href="mailto:band@example.com">band@example.com</a>
+        <ul class="contacts__links">
+          <li><a class="btn btn--dark" href="https://vk.ru/sys_pod_hot">ВКонтакте</a></li>
+          <li><a class="btn btn--dark" href="https://rutube.ru/channel/27890175/">Rutube</a></li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap site-footer__inner">
+      <p>© 2026 Системный Подход</p>
+      <ul class="site-footer__links">
+        <li><a href="https://vk.ru/sys_pod_hot">ВКонтакте</a></li>
+        <li><a href="https://rutube.ru/channel/27890175/">Rutube</a></li>
+        <li><a href="#top">Наверх</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="/static/js/index.js"></script>
+</body>
+
+</html>

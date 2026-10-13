@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Сны в зазеркалье: альбом группы «Системный Подход»</title>
+  <meta name="description"
+    content="Альбом «Сны в зазеркалье» группы «Системный Подход»: список песен, обложки и ссылки на площадки.">
+
+  <meta property="og:type" content="music.album">
+  <meta property="og:title" content="Сны в зазеркалье">
+  <meta property="og:description" content="Альбом группы «Системный Подход».">
+  <!-- TODO: cover from backend -->
+  <meta property="og:image" content="/static/img/album_cover.webp">
+
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23120f26'/><circle cx='16' cy='16' r='9' fill='%23f0603f'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/reset.css">
+  <link rel="stylesheet" href="/static/css/index.css">
+  <link rel="stylesheet" href="/static/css/album.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+
+<body id="top">
+  <a class="skip" href="#main">К содержимому</a>
+
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="logo" href="/">Системный Подход</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
+        <span></span><span></span>
+      </button>
+      <nav class="nav" id="nav" aria-label="Основное меню">
+        <ul>
+          <li><a href="/concerts">Выступления</a></li>
+          <li><a href="/#music">Музыка</a></li>
+          <li><a href="/#members">Участники</a></li>
+          <li><a href="/#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <section class="release-top">
+      <div class="wrap">
+        <a class="text-link back" href="/#music">
+          <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 8H2M7 3L2 8l5 5" />
+          </svg>
+          Все альбомы
+        </a>
+
+        <article class="album release">
+          <div class="album__art">
+            <span class="album__disc" aria-hidden="true"></span>
+            <!-- TODO: cover from backend -->
+            <img class="album__cover" src="/static/img/album_cover.webp" alt="Обложка альбома «{{ .album.Title }}»"
+              width="3000" height="3000" fetchpriority="high">
+          </div>
+
+          <div class="album__body">
+            <p class="album__type">{{ .album.Type }}</p>
+            <h1 class="album__title">{{ .album.Title }}</h1>
+            <p class="release__tagline">{{ .album.Annotation }}</p>
+
+            <dl class="facts">
+              <div>
+                <dt>Дата выхода</dt>
+                <dd><time datetime="{{ .album.ReleasedAt }}">{{ .album.ReleasedAtH }}</time></dd>
+              </div>
+              <div>
+                <dt>Песен</dt>
+                <dd>{{ len .album.Songs }}</dd>
+              </div>
+              <div>
+                <dt>Длительность</dt>
+                <dd><time>{{ .album.TotalDuration }}</time></dd>
+              </div>
+            </dl>
+
+            <div class="release__actions">
+              <a class="btn btn--primary" href="{{ .album.Streaming.VKLink }}">Слушать в ВКонтакте</a>
+              <a class="btn btn--outline" href="{{ .album.Streaming.YandexLink }}">Слушать в Яндекс Музыке</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Список песен -->
+    <section class="section section--alt" id="tracks" aria-labelledby="tracks-title">
+      <div class="wrap">
+        <div class="section__head">
+          <h2 class="section__title" id="tracks-title">Список песен</h2>
+        </div>
+
+        <ol class="tracks" role="list">
+          {{ range .album.Songs }}
+          <li class="track">
+            <span class="track__title">{{ .Title }}</span>
+            <time class="track__time">{{ .DurationH }}</time>
+          </li>
+          {{ end }}
+        </ol>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap site-footer__inner">
+      <p>© 2026 Системный Подход</p>
+      <ul class="site-footer__links">
+        <li><a href="https://vk.ru/sys_pod_hot">ВКонтакте</a></li>
+        <li><a href="https://rutube.ru/channel/27890175/">Rutube</a></li>
+        <li><a href="#top">Наверх</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="/static/js/index.js"></script>
+</body>
+
+</html>

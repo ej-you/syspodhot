@@ -14,6 +14,7 @@ import (
 	"github.com/gofiber/template/html/v2"
 
 	"syspodhot/config"
+	"syspodhot/internal/app/service/server/errhandler"
 	"syspodhot/internal/app/service/server/middleware"
 	"syspodhot/internal/pkg/db"
 	"syspodhot/internal/pkg/healthcheck"
@@ -39,7 +40,7 @@ func New(cfg *config.Config, dbStorage *db.DB, valid validator.Validator) (*Serv
 			Views:         html.New("./web/template", ".html"),
 			ServerHeader:  "Syspodhot",
 			StrictRouting: false,
-			// ErrorHandler:  errhandler.CustomErrorHandler,
+			ErrorHandler:  errhandler.CustomErrorHandler,
 		}),
 		started: make(chan struct{}),
 		exited:  make(chan struct{}),

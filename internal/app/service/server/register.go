@@ -4,6 +4,7 @@ import (
 	"syspodhot/config"
 	httpv1 "syspodhot/internal/app/controller/http/v1"
 	repodb "syspodhot/internal/app/repo/db"
+	"syspodhot/internal/app/service/server/middleware"
 	"syspodhot/internal/app/usecase"
 	"syspodhot/internal/pkg/db"
 	"syspodhot/internal/pkg/validator"
@@ -21,17 +22,19 @@ func (s *Server) registerEndpointsV1(cfg *config.Config, dbStorage *db.DB,
 	albumRepoDB := repodb.NewAlbumRepoDB(dbStorage)
 	concertRepoDB := repodb.NewConcertRepoDB(dbStorage)
 	// create usecases
-	userUC := usecase.NewUserUC(userRepoDB)
+	authUC := usecase.NewAuthUC(cfg, userRepoDB)
 	albumUC := usecase.NewAlbumUC(albumRepoDB)
 	concertUC := usecase.NewConcertUC(concertRepoDB)
 	// create controllers
-	controllerClient := httpv1.NewControllerClient(userUC, albumUC, concertUC, valid)
+	controllerClient := httpv1.NewControllerClient(cfg, authUC, albumUC, concertUC, valid)
+	ControllerAdmin := httpv1.NewControllerAdmin(albumUC, concertUC, valid)
 
-	// // middlewares
-	// loginRequired := middleware.LoginRequired()
-	// alreadyLoggedIn := middleware.AlreadyLoggedIn()
-	// mwJWTAccess := middleware.JWTAccess(cfg)
+	// middlewares
+	alreadyLoggedIn := middleware.AlreadyLoggedIn()
+	restrictArea := middleware.RestrictArea()
+	mwJWTAccess := middleware.JWTAccess(cfg)
 
 	// register endpoints
-	httpv1.RegisterClientEndpoints(s.fiberApp, controllerClient)
+	httpv1.RegisterClientEndpoints(s.fiberApp, controllerClient, alreadyLoggedIn)
+	httpv1.RegisterAdminEndpoints(s.fiberApp, ControllerAdmin, restrictArea, mwJWTAccess)
 }

@@ -102,6 +102,20 @@ a {
   color: var(--ink);
 }
 
+/* Кнопка редактирования (видна только администратору) */
+.btn--edit {
+  gap: 0.5rem;
+  padding: 0.55em 1.1em;
+  border-color: rgba(247, 242, 241, 0.5);
+  color: var(--text);
+  font-size: 0.9375rem;
+}
+
+.btn--edit:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .text-link {
   font-weight: 600;
   text-decoration: underline;
@@ -136,6 +150,25 @@ a {
   font: 700 clamp(0.95rem, 3.6vw, 1.125rem)/1 var(--font-display);
   letter-spacing: -0.01em;
   text-decoration: none;
+}
+
+.site-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+/* Пометка о включённом админском доступе */
+.admin-badge {
+  padding: 0.3em 0.7em;
+  border: 1.5px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .nav ul {

@@ -7,11 +7,20 @@
   padding-block: clamp(1.5rem, 3vw, 2.5rem) clamp(3rem, 7vw, 6rem);
 }
 
+/* Верхняя строка: ссылка назад слева, кнопка редактирования (для админа) справа */
+.page-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+}
+
 .back {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: clamp(1.25rem, 3vw, 2rem);
 }
 
 .back svg {

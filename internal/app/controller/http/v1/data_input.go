@@ -8,6 +8,27 @@ import (
 	"syspodhot/internal/pkg/validator"
 )
 
+// authBody represents a data for user auth (log in).
+type authBody struct {
+	// user username
+	Username string `json:"username" validate:"required,max=50"`
+	// user password
+	Password string `json:"password" validate:"required,min=8,max=40"`
+}
+
+// Parse parses authBody request data and validates it.
+func (a *authBody) Parse(ctx *fiber.Ctx, valid validator.Validator) error {
+	// parse body
+	if err := ctx.BodyParser(a); err != nil {
+		return err
+	}
+	// validate parsed data
+	if err := valid.Validate(a); err != nil {
+		return err
+	}
+	return nil
+}
+
 // albumPath represents a data with album ID in path params.
 type albumPath struct {
 	// album ID

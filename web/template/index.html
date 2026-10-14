@@ -30,7 +30,12 @@
 
   <header class="site-header">
     <div class="wrap site-header__inner">
-      <a class="logo" href="#top">Системный Подход</a>
+      <div class="site-header__brand">
+        <a class="logo" href="#top">Системный Подход</a>
+        {{ if .isAdmin }}
+        <span class="admin-badge" title="Включён админский доступ">Админ</span>
+        {{ end }}
+      </div>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
         <span></span><span></span>
       </button>

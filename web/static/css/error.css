@@ -1,0 +1,35 @@
+/* Страница ошибки. Подключается после index.css, использует его переменные и кнопки. */
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  padding: var(--pad);
+  text-align: center;
+}
+
+/* Маленькая «пластинка» над кодом */
+.error__mark {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 1.5rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, var(--bg) 0 6%, var(--accent) 6% 24%, transparent 24%),
+    repeating-radial-gradient(circle, #312967 0 2px, #151130 2px 4px);
+  box-shadow: 0 0 0 1px rgba(247, 242, 241, 0.22);
+}
+
+.error__code {
+  color: var(--accent);
+  font: 700 clamp(4.5rem, 22vw, 11rem)/1 var(--font-display);
+  letter-spacing: -0.05em;
+}
+
+.error__message {
+  max-width: 32rem;
+  margin: 1rem 0 2rem;
+  font: 500 clamp(1.125rem, 3vw, 1.5rem)/1.4 var(--font-body);
+}

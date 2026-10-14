@@ -1,0 +1,78 @@
+/* Страница входа администратора. Подключается после index.css, использует его переменные и кнопки. */
+
+.login {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: var(--pad);
+}
+
+.login__card {
+  width: min(100%, 26rem);
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow:
+    0 32px 64px -24px rgba(0, 0, 0, 0.75),
+    0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+.login__title {
+  margin-bottom: 1.5rem;
+  font: 700 clamp(1.375rem, 5vw, 1.75rem)/1.15 var(--font-display);
+  letter-spacing: -0.03em;
+  text-align: center;
+}
+
+.login__error {
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--accent);
+  border-radius: 6px;
+  background: rgba(255, 109, 76, 0.12);
+}
+
+.login__form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field__label {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.field__input {
+  width: 100%;
+  padding: 0.85em 1em;
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  font: 400 1rem/1.4 var(--font-body);
+  transition: border-color 0.2s;
+}
+
+.field__input:focus-visible {
+  border-color: var(--accent);
+  outline-offset: 0;
+}
+
+/* Автозаполнение браузера не должно красить поле в светло-голубой */
+.field__input:-webkit-autofill {
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--text);
+  box-shadow: 0 0 0 1000px var(--bg) inset;
+}
+
+.login__submit {
+  width: 100%;
+  margin-top: 0.5rem;
+}

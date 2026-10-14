@@ -1,10 +1,10 @@
 db:
-  name: "syspodhot" # db name
+  name: "syspodhot_test" # db name
   host: "127.0.0.1" # db host
   port: 27027 # db port
 
 app:
-  locale: "UTC" # "Europe/Moscow" # local time zone name
+  locale: "Europe/Moscow" # local time zone name
   logging:
     log_level: 1 # 1 - debug, 2 - info (default), 3 - warn, 4 - error, 5 - silent
     log_format: "json" # ("json", "text") set log format

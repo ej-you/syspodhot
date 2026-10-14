@@ -60,7 +60,9 @@ func InitSlog(options ...SlogOption) {
 		ReplaceAttr: func(_ []string, attr slog.Attr) slog.Attr {
 			// use time in locale
 			if attr.Key == "time" {
-				attr.Value = slog.AnyValue(time.Now().In(params.locale))
+				if t, ok := attr.Value.Any().(time.Time); ok {
+					attr.Value = slog.TimeValue(t.In(params.locale))
+				}
 			}
 			return attr
 		},

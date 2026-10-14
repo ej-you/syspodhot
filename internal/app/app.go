@@ -42,6 +42,7 @@ func NewServe() (*App, error) {
 	logger.InitSlog(
 		logger.WithLogLevel(cfg.Logging.LogLevel),
 		logger.WithFormat(cfg.Logging.LogFormat),
+		logger.WithLocale(cfg.Locale),
 	)
 	// print out config params in debug log mode
 	slog.Debug("current config", "config", cfg)
@@ -75,7 +76,7 @@ func NewCLI() (*App, error) {
 		return nil, fmt.Errorf("create config: %w", err)
 	}
 	// setup logger (text format and error level)
-	logger.InitSlog(logger.WithErrorLevel())
+	logger.InitSlog(logger.WithErrorLevel(), logger.WithLocale(cfg.Locale))
 
 	// connect to DB
 	dbInst, err := db.New(cfg.DB.DSN, cfg.DB.Name)

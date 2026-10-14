@@ -66,7 +66,7 @@ type (
 
 	App struct {
 		LocaleName string         `yaml:"locale"`
-		Locale     *time.Location `yaml:"-"`
+		Locale     *time.Location `yaml:"-" json:"-"`
 		Logging    `yaml:"logging"`
 		Server     `yaml:"server"`
 	}
@@ -93,7 +93,7 @@ type (
 	}
 
 	AccessToken struct {
-		Secret []byte        `json:"-"` // using SSL private key as token secret
+		Secret []byte        `yaml:"-" json:"-"` // using SSL private key as token secret
 		TTL    time.Duration `yaml:"ttl"`
 		Cookie Cookie        `yaml:"cookie"`
 	}

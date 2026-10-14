@@ -24,7 +24,7 @@ func (s *Server) registerEndpointsV1(cfg *config.Config, dbStorage *db.DB,
 	// create usecases
 	authUC := usecase.NewAuthUC(cfg, userRepoDB)
 	albumUC := usecase.NewAlbumUC(albumRepoDB)
-	concertUC := usecase.NewConcertUC(concertRepoDB)
+	concertUC := usecase.NewConcertUC(concertRepoDB, cfg.Locale)
 	// create controllers
 	controllerClient := httpv1.NewControllerClient(cfg, authUC, albumUC, concertUC, valid)
 	ControllerAdmin := httpv1.NewControllerAdmin(albumUC, concertUC, valid)

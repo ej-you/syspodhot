@@ -522,14 +522,14 @@ a {
   }
 }
 
-/* Вместо фото: абстрактная «пластинка» с инициалами.
-   Вариант плитки зависит от порядка в списке, данных для него не нужно. */
+/* Вместо фото: абстрактная плитка с инструментом (иконки в static/img/instruments.svg).
+   Цвет плитки и инструмента зависит от порядка в списке, данных для него не нужно. */
 .member__art {
   --tile: #241a4a;
   --ring: #33286b;
   --label: var(--accent);
   --cx: 50%;
-  --cy: 46%;
+  --cy: 50%;
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
@@ -545,8 +545,42 @@ a {
   background: repeating-radial-gradient(circle at var(--cx) var(--cy), transparent 0 9px, var(--ring) 9px 11px);
 }
 
+/* Инструмент по центру плитки */
+.member__icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 58%;
+  height: 58%;
+  transform: translate(-50%, -50%);
+  color: var(--label);
+}
+
+/* Вместо фото: абстрактная «пластинка» с инициалами.
+   Вариант плитки зависит от порядка в списке, данных для него не нужно. */
+/* .member__art {
+  --tile: #241a4a;
+  --ring: #33286b;
+  --label: var(--accent);
+  --cx: 50%;
+  --cy: 46%;
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--tile);
+} */
+
+/* Бороздки */
+/* .member__art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-radial-gradient(circle at var(--cx) var(--cy), transparent 0 9px, var(--ring) 9px 11px);
+} */
+
 /* Этикетка с инициалами */
-.member__label {
+/* .member__label {
   position: absolute;
   left: var(--cx);
   top: var(--cy);
@@ -560,7 +594,7 @@ a {
   color: var(--ink);
   font: 700 clamp(1rem, 2.4vw, 1.5rem)/1 var(--font-display);
   letter-spacing: -0.02em;
-}
+} */
 
 .member:nth-child(6n + 2) .member__art {
   --tile: #2a1830;

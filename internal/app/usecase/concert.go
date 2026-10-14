@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"slices"
 	"time"
 	"uuid"
 
@@ -54,16 +55,39 @@ func (u *ConcertUC) GetComming() ([]*entity.Concert, error) {
 	return concerts, nil
 }
 
-// GetPast returns all past concerts.
-func (u *ConcertUC) GetPast() ([]*entity.Concert, error) {
+// GetPastGroupedByYear returns all past concerts grouped by year.
+func (u *ConcertUC) GetPastGroupedByYear() ([]entity.ConcertsByYear, error) {
 	concerts, err := u.concertRepoDB.GetMany(context.Background(), false, true)
 	if err != nil {
 		return nil, err
 	}
-	for idx := range concerts {
-		concerts[idx].Datetime = concerts[idx].Datetime.In(u.locale)
+
+	// group concerts by year
+	byYearMap := make(map[int][]*entity.Concert)
+	var year []*entity.Concert
+	var ok bool
+	for _, concert := range concerts {
+		// set timezone for concert datetime
+		concert.Datetime = concert.Datetime.In(u.locale)
+
+		if year, ok = byYearMap[concert.Year()]; ok {
+			year = append(year, concert)
+		} else {
+			byYearMap[concert.Year()] = []*entity.Concert{concert}
+		}
 	}
-	return concerts, nil
+
+	// collect slice of ConcertsByYear structs
+	groups := make([]entity.ConcertsByYear, 0, len(byYearMap))
+	for year, concerts := range byYearMap {
+		groups = append(groups, entity.ConcertsByYear{Year: year, Concerts: concerts})
+	}
+	// sort by year
+	slices.SortFunc(groups, func(a, b entity.ConcertsByYear) int {
+		return b.Year - a.Year // DESC
+	})
+
+	return groups, nil
 }
 
 func (u *ConcertUC) Update(concert *entity.Concert) error {

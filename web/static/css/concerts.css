@@ -1,0 +1,234 @@
+/* Страница выступлений. Подключается после index.css, использует его переменные и общие блоки
+   (шапка, билеты, секции, текстовые ссылки, подвал). */
+
+/* ---------- Меню: текущая страница ---------- */
+
+.nav a[aria-current="page"] {
+  text-decoration-line: underline;
+}
+
+/* ---------- Заголовок страницы ---------- */
+
+.page-head {
+  padding-block: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* Ссылка «На главную»: то же оформление, что у «Все альбомы» на странице альбома
+   (при желании можно вынести в index.css и убрать из album.css) */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+}
+
+.back svg {
+  flex: none;
+}
+
+.page-head__title {
+  font: 700 clamp(2.25rem, 6vw, 4.5rem)/1.05 var(--font-display);
+  letter-spacing: -0.04em;
+}
+
+/* Первая секция идёт сразу под заголовком, верхний отступ не нужен */
+.section--flush-top {
+  padding-top: 0;
+}
+
+.empty {
+  padding: 2rem;
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+}
+
+/* ---------- Прошедшие: годы ---------- */
+
+.year-group + .year-group {
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+
+.year-group__title {
+  margin-bottom: 1rem;
+  color: var(--muted);
+  font: 700 clamp(1.5rem, 3vw, 2rem)/1.1 var(--font-display);
+  letter-spacing: -0.03em;
+}
+
+/* ---------- Прошедшие: карточки ---------- */
+
+.shows {
+  border-top: 1px solid var(--line);
+}
+
+.show {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem clamp(1.25rem, 4vw, 2.5rem);
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+/* С фото: слева миниатюра, справа текст */
+.show--media {
+  grid-template-columns: minmax(150px, 300px) minmax(0, 1fr);
+  align-items: center;
+}
+
+.show__cover {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.show__cover img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.show__count {
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0.2em 0.75em;
+  border-radius: 999px;
+  background: rgba(18, 15, 38, 0.85);
+  color: var(--text);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.show__date {
+  color: var(--muted);
+}
+
+.show__title {
+  margin: 0.25rem 0 0.5rem;
+  font: 600 clamp(1.125rem, 2.2vw, 1.5rem)/1.25 var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.show__place {
+  font-weight: 500;
+}
+
+.show__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.ticket__edit {
+  margin-top: 1rem;
+}
+
+/* «Смотреть видео»: заметная кнопка с контуром цвета акцента, чтобы не сливалась с текстом */
+.btn--video {
+  gap: 0.6rem;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn--video:hover {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+/* ---------- Просмотр фото ---------- */
+
+body:has(.lightbox[open]) {
+  overflow: hidden;
+}
+
+.lightbox {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(10, 8, 22, 0.95);
+  color: var(--text);
+}
+
+.lightbox[open] {
+  display: grid;
+  place-items: center;
+}
+
+.lightbox__figure {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  max-width: 100%;
+  padding: clamp(3.5rem, 6vw, 4.5rem) clamp(3.75rem, 8vw, 6rem) 1.5rem;
+}
+
+.lightbox__img {
+  width: auto;
+  max-width: 100%;
+  max-height: calc(100svh - 10rem);
+  object-fit: contain;
+  border-radius: 2px;
+}
+
+.lightbox__caption {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  text-align: center;
+}
+
+.lightbox__btn {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(247, 242, 241, 0.12);
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.lightbox__btn:hover {
+  background: rgba(247, 242, 241, 0.24);
+}
+
+.lightbox__btn[hidden] {
+  display: none;
+}
+
+.lightbox__close {
+  top: clamp(0.5rem, 2vw, 1.5rem);
+  right: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+.lightbox__prev,
+.lightbox__next {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.lightbox__prev {
+  left: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+.lightbox__next {
+  right: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+/* ---------- Адаптив ---------- */
+
+@media (max-width: 640px) {
+  .show--media {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

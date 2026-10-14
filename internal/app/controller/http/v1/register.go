@@ -8,6 +8,7 @@ func RegisterClientEndpoints(router fiber.Router, ctrlClient *ControllerClient,
 
 	router.Get("/", ctrlClient.Index)
 	router.Get("/album/:id", ctrlClient.Album)
+	router.Get("/concerts", ctrlClient.Concerts)
 
 	router.Get("/admin", alreadyLoggedIn, ctrlClient.Auth)
 	router.Post("/admin", ctrlClient.AuthAPI)

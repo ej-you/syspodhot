@@ -85,8 +85,20 @@ func (c *ControllerClient) Album(ctx *fiber.Ctx) error {
 
 // Concerts renders HTML with concerts page.
 func (c *ControllerClient) Concerts(ctx *fiber.Ctx) error {
-	// TODO: implement
-	panic("unimplemented")
+	comming, err := c.concertUC.GetComming()
+	if err != nil {
+		return fmt.Errorf("get comming concerts: %w", err)
+	}
+	past, err := c.concertUC.GetPastGroupedByYear()
+	if err != nil {
+		return fmt.Errorf("get past concerts: %w", err)
+	}
+
+	return ctx.Render("concerts", fiber.Map{
+		"isAdmin": ctx.Cookies(_accessTokenCookie) != "",
+		"comming": comming,
+		"past":    past,
+	})
 }
 
 // Auth renders HTML with auth page for admin.

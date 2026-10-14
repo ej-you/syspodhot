@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1000" width="1500" height="1000">
+  <rect width="1500" height="1000" fill="#3a1c2e"/>
+  <polygon points="1041,0 761,1000 1321,1000" fill="#dc6a54" opacity="0.16"/>
+  <circle cx="1041" cy="517" r="134" fill="#dc6a54" opacity="0.9"/>
+  <circle cx="1004" cy="549" r="44" fill="#f0603f" opacity="0.5"/>
+  <circle cx="253" cy="591" r="40" fill="#120f26"/>
+  <rect x="173" y="639" width="160" height="361" rx="48" fill="#120f26"/>
+  <circle cx="794" cy="598" r="40" fill="#120f26"/>
+  <rect x="714" y="646" width="160" height="354" rx="48" fill="#120f26"/>
+  <circle cx="1248" cy="714" r="40" fill="#120f26"/>
+  <rect x="1168" y="762" width="160" height="238" rx="48" fill="#120f26"/>
+  <text x="40" y="96" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#b9aecb">Тестовое фото 25</text>
+</svg>

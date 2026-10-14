@@ -18,9 +18,9 @@ func TestConcert_Create(t *testing.T) {
 
 	concert := &entity.Concert{
 		ID:         uuid.New(),
-		Title:      "Концерт по кайфу",
-		Place:      "Ростов-на-Дону",
-		Datetime:   time.Now().Add(24 * time.Hour),
+		Title:      "Новогодний концерт",
+		Place:      "Нижний Новгород",
+		Datetime:   time.Now().AddDate(0, 2, 12),
 		TicketLink: "#",
 		Photos: []string{
 			"file:///home/test/concert1_1.png",

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1000" width="1500" height="1000">
+  <rect width="1500" height="1000" fill="#2b2056"/>
+  <polygon points="535,0 255,1000 815,1000" fill="#dc6a54" opacity="0.16"/>
+  <circle cx="535" cy="505" r="114" fill="#dc6a54" opacity="0.9"/>
+  <circle cx="727" cy="509" r="38" fill="#dc6a54" opacity="0.5"/>
+  <circle cx="96" cy="605" r="40" fill="#120f26"/>
+  <rect x="16" y="653" width="160" height="347" rx="48" fill="#120f26"/>
+  <circle cx="480" cy="707" r="40" fill="#120f26"/>
+  <rect x="400" y="755" width="160" height="245" rx="48" fill="#120f26"/>
+  <circle cx="751" cy="703" r="40" fill="#120f26"/>
+  <rect x="671" y="751" width="160" height="249" rx="48" fill="#120f26"/>
+  <circle cx="1066" cy="601" r="40" fill="#120f26"/>
+  <rect x="986" y="649" width="160" height="351" rx="48" fill="#120f26"/>
+  <circle cx="1381" cy="721" r="40" fill="#120f26"/>
+  <rect x="1301" y="769" width="160" height="231" rx="48" fill="#120f26"/>
+  <text x="40" y="96" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#b9aecb">Тестовое фото 23</text>
+</svg>

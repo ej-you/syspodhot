@@ -22,6 +22,10 @@ var (
 		LogLevel:  2, //nolint:mnd // default level (info)
 		LogFormat: "text",
 	}
+	_defMedia = Media{
+		Album:   "./media/album",
+		Concert: "./media/concert",
+	}
 	_defCookie = Cookie{
 		Path:     "",
 		Secure:   false,
@@ -68,12 +72,18 @@ type (
 		LocaleName string         `yaml:"locale"`
 		Locale     *time.Location `yaml:"-" json:"-"`
 		Logging    `yaml:"logging"`
+		Media      `yaml:"media"`
 		Server     `yaml:"server"`
 	}
 
 	Logging struct {
 		LogLevel  int    `yaml:"log_level"`
 		LogFormat string `yaml:"log_format"`
+	}
+
+	Media struct {
+		Album   string `yaml:"album"`
+		Concert string `yaml:"concert"`
 	}
 
 	Server struct {

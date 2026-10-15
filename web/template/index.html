@@ -96,6 +96,15 @@
       <div class="wrap">
         <div class="section__head">
           <h2 class="section__title" id="music-title">Музыка</h2>
+          {{ if .isAdmin }}
+          <a class="btn btn--edit" href="/admin/album/new">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Добавить альбом
+          </a>
+          {{ end }}
         </div>
 
         <div class="albums">
@@ -140,7 +149,6 @@
 
         <ul class="members">
           <li class="member">
-            <!-- <div class="member__art" aria-hidden="true"><span class="member__label">ЮЮ</span></div> -->
             <div class="member__art" aria-hidden="true">
               <svg class="member__icon">
                 <use href="/static/img/instruments.svg#vocals"></use>
@@ -150,7 +158,6 @@
             <p class="member__role">Вокал</p>
           </li>
           <li class="member">
-            <!-- <div class="member__art" aria-hidden="true"><span class="member__label">ЕК</span></div> -->
             <div class="member__art" aria-hidden="true">
               <svg class="member__icon">
                 <use href="/static/img/instruments.svg#guitar"></use>
@@ -160,7 +167,6 @@
             <p class="member__role">Гитара</p>
           </li>
           <li class="member">
-            <!-- <div class="member__art" aria-hidden="true"><span class="member__label">АК</span></div> -->
             <div class="member__art" aria-hidden="true">
               <svg class="member__icon">
                 <use href="/static/img/instruments.svg#bass"></use>
@@ -170,7 +176,6 @@
             <p class="member__role">Бас-гитара</p>
           </li>
           <li class="member">
-            <!-- <div class="member__art" aria-hidden="true"><span class="member__label">РК</span></div> -->
             <div class="member__art" aria-hidden="true">
               <svg class="member__icon">
                 <use href="/static/img/instruments.svg#drums"></use>
@@ -180,7 +185,6 @@
             <p class="member__role">Ударные</p>
           </li>
           <li class="member">
-            <!-- <div class="member__art" aria-hidden="true"><span class="member__label">ДД</span></div> -->
             <div class="member__art" aria-hidden="true">
               <svg class="member__icon">
                 <use href="/static/img/instruments.svg#guitar"></use>
@@ -190,7 +194,6 @@
             <p class="member__role">Гитара</p>
           </li>
           <li class="member">
-            <!-- <div class="member__art" aria-hidden="true"><span class="member__label">СВ</span></div> -->
             <div class="member__art" aria-hidden="true">
               <svg class="member__icon">
                 <use href="/static/img/instruments.svg#keys"></use>

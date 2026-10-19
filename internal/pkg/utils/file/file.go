@@ -44,13 +44,12 @@ func UploadAndSaveFiles(ctx *fiber.Ctx, key, dir string) ([]string, error) {
 	}
 
 	filenames := make([]string, len(files))
-	for _, file := range files {
+	for idx, file := range files {
 		filename, err := saveFile(file, dir)
 		if err != nil {
 			return nil, err
 		}
-
-		filenames = append(filenames, filename)
+		filenames[idx] = filename
 	}
 	return filenames, nil
 }

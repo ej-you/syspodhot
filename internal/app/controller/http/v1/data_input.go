@@ -113,7 +113,7 @@ func (a *albumBody) Parse(ctx *fiber.Ctx, valid validator.Validator, mediaDir st
 	slog.Debug("parse album data", "form", form)
 
 	// upload album cover
-	a.Photo, err = utilsfile.UploadAndSaveFile(ctx, mediaDir, "cover", nil)
+	a.Photo, err = utilsfile.UploadAndSaveFile(ctx, "cover", mediaDir)
 	if err != nil {
 		return fmt.Errorf("upload and save photo: %w", err)
 	}

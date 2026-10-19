@@ -8,3 +8,9 @@ ENV/
 bin/
 notes.txt
 temp/
+
+# media
+media/album/*
+!media/album/.keep
+media/concert/*
+!media/concert/.keep

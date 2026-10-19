@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
+	"strings"
 	"time"
 	_ "time/tzdata" // compressed tz data to don't depend on system files
 
@@ -47,6 +49,7 @@ var (
 	_defApp = App{
 		LocaleName: "UTC",
 		Logging:    _defLogging,
+		Media:      _defMedia,
 		Server:     _defServer,
 	}
 	_defConfig = Config{
@@ -82,8 +85,10 @@ type (
 	}
 
 	Media struct {
-		Album   string `yaml:"album"`
-		Concert string `yaml:"concert"`
+		Album      string `yaml:"album"`
+		AlbumURL   string
+		Concert    string `yaml:"concert"`
+		ConcertURL string
 	}
 
 	Server struct {
@@ -133,6 +138,10 @@ func New() (*Config, error) {
 	}
 	cfg.App.Locale = locale
 
+	// set media URLs
+	cfg.Media.AlbumURL = filepathToURL(cfg.Media.Album)
+	cfg.Media.ConcertURL = filepathToURL(cfg.Media.Concert)
+
 	// set token secret
 	if err := cfg.setTokenSecret(); err != nil {
 		return nil, fmt.Errorf("token secret: %w", err)
@@ -141,6 +150,22 @@ func New() (*Config, error) {
 	// collect DSN string
 	cfg.DB.DSN = fmt.Sprintf("mongodb://%s:%s/", cfg.DB.Host, cfg.DB.Port)
 	return cfg, nil
+}
+
+// filepathToURL converts filepath to URL.
+func filepathToURL(filepath string) string {
+	// clean from dots and slashes
+	filepath = path.Clean(filepath)
+
+	// add starting slash
+	if !strings.HasPrefix(filepath, "/") {
+		filepath = "/" + filepath
+	}
+	// add ending slash
+	if !strings.HasSuffix(filepath, "/") {
+		filepath += "/"
+	}
+	return filepath
 }
 
 // setTokenSecret sets SSL privateKey.key content as a token secret.

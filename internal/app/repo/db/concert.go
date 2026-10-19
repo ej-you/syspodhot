@@ -59,19 +59,19 @@ func (r *ConcertRepoDB) GetByID(ctx context.Context, id uuid.UUID) (*entity.Conc
 	return concert.toEntity(), nil
 }
 
-// GetAll returns all concerts. If commingOnly is true it returns only comming concerts.
+// GetAll returns all concerts. If commingOnly is true it returns only coming concerts.
 func (r *ConcertRepoDB) GetMany(ctx context.Context,
-	commingOnly, pastOnly bool) ([]*entity.Concert, error) {
+	comingOnly, pastOnly bool) ([]*entity.Concert, error) {
 
 	concertListRaw := make([]concert, 0)
 
-	// apply filter if commingOnly is true
+	// apply filter if comingOnly is true
 	filter := bson.M{}
-	if commingOnly && !pastOnly {
+	if comingOnly && !pastOnly {
 		filter = bson.M{
 			"datetime": bson.M{"$gt": time.Now().UTC()},
 		}
-	} else if pastOnly && !commingOnly {
+	} else if pastOnly && !comingOnly {
 		filter = bson.M{
 			"datetime": bson.M{"$lte": time.Now().UTC()},
 		}

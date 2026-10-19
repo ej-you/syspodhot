@@ -45,6 +45,6 @@ func (u *AlbumUC) Update(album *entity.Album) error {
 	return u.albumRepoDB.UpdateFull(context.Background(), album) // err OR nil
 }
 
-func (u *AlbumUC) Delete(id uuid.UUID) error {
+func (u *AlbumUC) Delete(id uuid.UUID) (*entity.Album, error) {
 	return u.albumRepoDB.DeleteByID(context.Background(), id) // err OR nil
 }

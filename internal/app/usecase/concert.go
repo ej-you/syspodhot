@@ -43,8 +43,8 @@ func (u *ConcertUC) Get(id uuid.UUID) (*entity.Concert, error) {
 	return concert, nil
 }
 
-// GetComming returns all comming concerts.
-func (u *ConcertUC) GetComming() ([]*entity.Concert, error) {
+// GetComing returns all coming concerts.
+func (u *ConcertUC) GetComing() ([]*entity.Concert, error) {
 	concerts, err := u.concertRepoDB.GetMany(context.Background(), true, false)
 	if err != nil {
 		return nil, err
@@ -64,17 +64,12 @@ func (u *ConcertUC) GetPastGroupedByYear() ([]entity.ConcertsByYear, error) {
 
 	// group concerts by year
 	byYearMap := make(map[int][]*entity.Concert)
-	var year []*entity.Concert
-	var ok bool
+	var year int
 	for _, concert := range concerts {
 		// set timezone for concert datetime
 		concert.Datetime = concert.Datetime.In(u.locale)
-
-		if year, ok = byYearMap[concert.Year()]; ok {
-			year = append(year, concert)
-		} else {
-			byYearMap[concert.Year()] = []*entity.Concert{concert}
-		}
+		year = concert.Year()
+		byYearMap[year] = append(byYearMap[year], concert)
 	}
 
 	// collect slice of ConcertsByYear structs

@@ -52,8 +52,7 @@ type Streaming struct {
 
 // Song represents a one song.
 type Song struct {
-	ID    uuid.UUID `json:"id"`
-	Title string    `json:"title"`
+	Title string `json:"title"`
 	// song duration in seconds
 	Duration int `json:"duration"`
 }

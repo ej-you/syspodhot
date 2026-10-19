@@ -21,34 +21,30 @@ func TestAlbum_Create(t *testing.T) {
 
 	album := &entity.Album{
 		ID:         uuid.New(),
-		Photo:      "file:///home/test/test.png",
+		Photo:      "",
 		Title:      "Рич&гай",
 		Type:       "альбом",
 		Annotation: "Карты, деньги, два ствола",
 		ReleasedAt: time.Now(),
 		Streaming: entity.Streaming{
-			VKLink:     "#",
-			YandexLink: "#",
+			VKLink:     "",
+			YandexLink: "",
 		},
 		Songs: []entity.Song{
 			{
-				ID:       uuid.New(),
 				Title:    "Карты",
 				Duration: 224,
 			},
 			{
-				ID:       uuid.New(),
 				Title:    "Деньги",
 				Duration: 296,
 			},
 			{
-				ID:       uuid.New(),
 				Title:    "Ствол",
 				Duration: 189,
 			},
 
 			{
-				ID:       uuid.New(),
 				Title:    "Ствол 2",
 				Duration: 177,
 			},
@@ -90,12 +86,10 @@ func TestAlbum_UpdateFull(t *testing.T) {
 		},
 		Songs: []entity.Song{
 			{
-				ID:       uuid.New(),
 				Title:    "Зелено - зелено",
 				Duration: 202,
 			},
 			{
-				ID:       uuid.New(),
 				Title:    "Тьма тьмущая",
 				Duration: 252,
 			},
@@ -110,9 +104,11 @@ func TestAlbum_Delete(t *testing.T) {
 	repo, err := testAlbumRepo()
 	require.NoError(t, err, "create album repo")
 
-	id := uuid.MustParse("c82649cb-80b0-4605-9ea5-98c9a6689d98")
-	err = repo.DeleteByID(context.Background(), id)
+	id := uuid.MustParse("32922206-3abd-48e7-8ab9-e08861ed7b61")
+	deleted, err := repo.DeleteByID(context.Background(), id)
 	require.NoError(t, err, "delete album")
+
+	t.Logf("Deleted album: %+v", deleted)
 }
 
 func testAlbumRepo() (*AlbumRepoDB, error) {

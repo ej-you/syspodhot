@@ -100,7 +100,7 @@ func (r *AlbumRepoDB) UpdateFull(ctx context.Context, album *entity.Album) error
 }
 
 // DeleteByID deletes album with given ID.
-func (r *AlbumRepoDB) DeleteByID(ctx context.Context, id uuid.UUID) error {
+func (r *AlbumRepoDB) DeleteByID(ctx context.Context, id uuid.UUID) (*entity.Album, error) {
 	album := &album{}
 
 	err := r.dbStorage.
@@ -108,7 +108,7 @@ func (r *AlbumRepoDB) DeleteByID(ctx context.Context, id uuid.UUID) error {
 		FindOneAndDelete(ctx, bson.M{_idField: id}).
 		Decode(album)
 	if goerrors.Is(err, mongo.ErrNoDocuments) {
-		return errors.ErrNotFound
+		return nil, errors.ErrNotFound
 	}
-	return err // err OR nil
+	return album.toEntity(), err // err OR nil
 }

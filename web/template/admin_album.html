@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if .album }}Редактирование альбома{{ else }}Новый альбом{{ end }}: Системный Подход</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23120f26'/><circle cx='16' cy='16' r='9' fill='%23f0603f'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/reset.css">
+  <link rel="stylesheet" href="/static/css/index.css">
+  <link rel="stylesheet" href="/static/css/admin.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+
+<body>
+  <a class="skip" href="#main">К содержимому</a>
+
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <div class="site-header__brand">
+        <a class="logo" href="/">Системный Подход</a>
+        <span class="admin-badge" title="Включён админский доступ">Админ</span>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
+        <span></span><span></span>
+      </button>
+      <nav class="nav" id="nav" aria-label="Основное меню">
+        <ul>
+          <li><a href="/concerts">Выступления</a></li>
+          <li><a href="/#music">Музыка</a></li>
+          <li><a href="/#members">Участники</a></li>
+          <li><a href="/#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin" id="main">
+    <div class="wrap">
+      <a class="text-link back" href="{{ if .album }}/album/{{ .album.ID }}{{ else }}/#music{{ end }}">
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 8H2M7 3L2 8l5 5" />
+        </svg>
+        {{ if .album }}К альбому{{ else }}К альбомам{{ end }}
+      </a>
+
+      <h1 class="admin__title">{{ if .album }}Редактирование альбома{{ else }}Новый альбом{{ end }}</h1>
+
+      {{ if .error }}
+      <p class="admin__error" role="alert">{{ .error }}</p>
+      {{ end }}
+
+      <form class="admin-form" action="{{ if .album }}/admin/album/{{ .album.ID }}{{ else }}/admin/album/new{{ end }}"
+        method="post" enctype="multipart/form-data">
+
+        <section class="form-section">
+          <h2 class="form-section__title">Основное</h2>
+
+          <div class="field">
+            <label class="field__label" for="title">Название</label>
+            <input class="field__input" id="title" name="title" type="text" value="{{ .album.Title }}" required>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field__label" for="type">Тип</label>
+              <select class="field__input" id="type" name="type">
+                <option value="Альбом" {{ if eq .album.Type "Альбом" }}selected{{ end }}>Альбом</option>
+                <option value="Сингл" {{ if eq .album.Type "Сингл" }}selected{{ end }}>Сингл</option>
+                <option value="EP" {{ if eq .album.Type "EP" }}selected{{ end }}>EP</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="field__label" for="released_at">Дата выхода</label>
+              <input class="field__input" id="released_at" name="released_at" type="date"
+                value='{{ if not .album.ReleasedAt.IsZero }}{{ .album.ReleasedAt.Format "2006-01-02" }}{{ end }}'
+                required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="annotation">Краткая подпись</label>
+            <textarea class="field__input" id="annotation" name="annotation" rows="3">{{ .album.Annotation }}</textarea>
+            <p class="field__hint">Необязательно. Одна-две строки под названием на странице альбома.</p>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2 class="form-section__title">Обложка</h2>
+
+          <div class="cover-field">
+            <div class="cover-field__box">
+              <img class="cover-field__preview" id="cover-preview" src="{{ .mediaAlbum }}{{ .album.Photo }}"
+                alt="Текущая обложка" {{ if not .album.Photo }}hidden{{ end }}>
+              <div class="cover-field__empty" id="cover-empty" {{ if .album.Photo }}hidden{{ end }}>Нет обложки</div>
+            </div>
+            <div class="field">
+              <label class="field__label" for="cover">Файл обложки</label>
+              <input class="field__input" id="cover" name="cover" type="file" accept="image/jpeg,image/png,image/webp">
+              <p class="field__hint">Квадратное изображение, лучше не меньше 1000×1000. Если файл не выбран, останется
+                текущая обложка.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2 class="form-section__title">Список песен</h2>
+
+          <ol class="songs" id="songs">
+            {{ range $i, $s := .album.Songs }}
+            <li class="songs__row">
+              <input class="field__input" name="songs[{{ $i }}].title" type="text" value="{{ $s.Title }}"
+                placeholder="Название песни" aria-label="Название песни" required>
+              <input class="field__input" name="songs[{{ $i }}].duration" type="text" value="{{ $s.DurationH }}"
+                inputmode="numeric" pattern="\d{1,3}:[0-5]\d" placeholder="03:42" aria-label="Длительность, mm:ss"
+                required>
+              <div class="songs__tools">
+                <button class="icon-btn" type="button" data-song-up aria-label="Поднять выше">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M6 15l6-6 6 6" />
+                  </svg>
+                </button>
+                <button class="icon-btn" type="button" data-song-down aria-label="Опустить ниже">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+                <button class="icon-btn" type="button" data-song-remove aria-label="Удалить песню">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6L6 18" />
+                  </svg>
+                </button>
+              </div>
+            </li>
+            {{ end }}
+          </ol>
+
+          <div class="songs__footer">
+            <button class="btn btn--edit" type="button" id="add-song">Добавить песню</button>
+            <p class="songs__total" id="songs-total"></p>
+          </div>
+          <p class="field__hint">Длительность в формате mm:ss, например 03:42. Количество песен и общее время
+            считаются автоматически.</p>
+        </section>
+
+        <section class="form-section">
+          <h2 class="form-section__title">Ссылки на площадки</h2>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field__label" for="streaming__vk">ВКонтакте</label>
+              <input class="field__input" id="streaming__vk" name="streaming__vk" type="url"
+                value="{{ .album.Streaming.VKLink }}" placeholder="https://vk.ru/...">
+            </div>
+            <div class="field">
+              <label class="field__label" for="streaming__yandex">Яндекс Музыка</label>
+              <input class="field__input" id="streaming__yandex" name="streaming__yandex" type="url"
+                value="{{ .album.Streaming.YandexLink }}" placeholder="https://music.yandex.ru/...">
+            </div>
+          </div>
+          <p class="field__hint">Необязательны, но без них как-то не очень</p>
+        </section>
+
+        <div class="form-actions">
+          <button class="btn btn--primary" type="submit">Сохранить</button>
+          <a class="text-link" href="{{ if .album }}/album/{{ .album.ID }}{{ else }}/#music{{ end }}">Отмена</a>
+        </div>
+      </form>
+
+      {{ if .album }}
+      <section class="danger-zone">
+        <h2 class="form-section__title">Удаление</h2>
+        <p>Альбом будет удалён вместе со списком песен и обложкой. Это действие нельзя отменить.</p>
+        <form action="/admin/album/{{ .album.ID }}/delete" method="post"
+          data-confirm="Удалить альбом «{{ .album.Title }}»? Это действие нельзя отменить.">
+          <button class="btn btn--danger" type="submit">Удалить альбом</button>
+        </form>
+      </section>
+      {{ end }}
+    </div>
+  </main>
+
+  <!-- Шаблон новой строки списка песен (используется скриптом, индексы он пересчитывает сам) -->
+  <template id="song-row-template">
+    <li class="songs__row">
+      <input class="field__input" name="songs[0].title" type="text" placeholder="Название песни"
+        aria-label="Название песни" required>
+      <input class="field__input" name="songs[0].duration" type="text" inputmode="numeric" pattern="\d{1,3}:[0-5]\d"
+        placeholder="03:42" aria-label="Длительность, mm:ss" required>
+      <div class="songs__tools">
+        <button class="icon-btn" type="button" data-song-up aria-label="Поднять выше">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 15l6-6 6 6" />
+          </svg>
+        </button>
+        <button class="icon-btn" type="button" data-song-down aria-label="Опустить ниже">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+        <button class="icon-btn" type="button" data-song-remove aria-label="Удалить песню">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+    </li>
+  </template>
+
+  <script src="/static/js/index.js"></script>
+  <script src="/static/js/admin.js"></script>
+</body>
+
+</html>

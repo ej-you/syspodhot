@@ -1,0 +1,384 @@
+/* Админские страницы создания и редактирования (альбомы и выступления).
+   Подключается после index.css, использует его переменные, шапку и кнопки. */
+
+html {
+  /* Тёмные системные элементы: выбор даты, список, поле файла */
+  color-scheme: dark;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.admin {
+  --danger: #ff8f8f;
+  padding-block: clamp(1.5rem, 3vw, 2.5rem) clamp(3rem, 7vw, 6rem);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Ссылка назад: то же оформление, что на страницах альбома и выступлений */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+}
+
+.back svg {
+  flex: none;
+}
+
+.admin__title {
+  margin-bottom: 1.5rem;
+  font: 700 clamp(1.75rem, 4vw, 2.75rem)/1.1 var(--font-display);
+  letter-spacing: -0.03em;
+}
+
+.admin__error {
+  max-width: 56rem;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--accent);
+  border-radius: 6px;
+  background: rgba(255, 109, 76, 0.12);
+}
+
+/* ---------- Форма ---------- */
+
+.admin-form {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 56rem;
+}
+
+.form-section {
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.form-section__title {
+  font: 600 1.125rem/1.3 var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 1.25rem;
+}
+
+.field__label {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.field__hint {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.field__input {
+  width: 100%;
+  padding: 0.8em 1em;
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  font: 400 1rem/1.4 var(--font-body);
+  transition: border-color 0.2s;
+}
+
+textarea.field__input {
+  min-height: 5.5rem;
+  resize: vertical;
+}
+
+.field__input:focus-visible {
+  border-color: var(--accent);
+  outline-offset: 0;
+}
+
+.field__input:-webkit-autofill {
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--text);
+  box-shadow: 0 0 0 1000px var(--bg) inset;
+}
+
+.field__input[type="file"] {
+  padding: 0.5em;
+}
+
+.field__input::file-selector-button,
+.field__input[type="file"]::file-selector-button {
+  margin-right: 1rem;
+  padding: 0.5em 1.1em;
+  border: 1.5px solid rgba(247, 242, 241, 0.5);
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  font: 500 0.9375rem var(--font-body);
+  cursor: pointer;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+}
+
+/* ---------- Обложка альбома ---------- */
+
+.cover-field {
+  display: grid;
+  grid-template-columns: minmax(120px, 200px) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.cover-field__preview,
+.cover-field__empty {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 2px;
+}
+
+.cover-field__preview {
+  object-fit: cover;
+}
+
+.cover-field__empty {
+  display: grid;
+  place-items: center;
+  padding: 0.5rem;
+  background: var(--bg);
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  font-size: 0.9375rem;
+  text-align: center;
+}
+
+/* ---------- Список песен ---------- */
+
+.songs {
+  display: grid;
+  gap: 0.5rem;
+  counter-reset: song;
+}
+
+.songs__row {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) 6rem auto;
+  gap: 0.5rem;
+  align-items: center;
+  counter-increment: song;
+}
+
+.songs__row::before {
+  content: counter(song);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.songs__tools {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1.5px solid var(--line);
+  border-radius: 50%;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.icon-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.songs__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+}
+
+.songs__total {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Фотографии выступления ---------- */
+
+.photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.photos--new:empty {
+  display: none;
+}
+
+.photo {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.photo__img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.photo__option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+.photo__option input {
+  accent-color: var(--accent);
+}
+
+.photo__name {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.875rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Фото, отмеченное на удаление */
+.photo:has(.photo__delete input:checked) {
+  border-color: var(--danger);
+}
+
+.photo:has(.photo__delete input:checked) .photo__img {
+  opacity: 0.35;
+}
+
+.photo:has(.photo__delete input:checked) .photo__delete {
+  color: var(--danger);
+}
+
+.photo .btn {
+  padding: 0.4em 0.9em;
+  font-size: 0.875rem;
+}
+
+.uploader {
+  display: grid;
+  gap: 1rem;
+}
+
+.uploader__drop {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border: 1.5px dashed var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.uploader__drop.is-over {
+  border-color: var(--accent);
+}
+
+.uploader__drop:focus-within {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* У настоящих <button> браузер рисует серый фон: у кнопок с контуром он не нужен */
+button.btn--edit,
+button.btn--danger {
+  background: none;
+}
+
+/* ---------- Удаление ---------- */
+
+.btn--danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn--danger:hover {
+  background: var(--danger);
+  color: var(--ink);
+}
+
+.danger-zone {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+  max-width: 56rem;
+  margin-top: 2.5rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid rgba(255, 143, 143, 0.4);
+  border-radius: 6px;
+}
+
+/* ---------- Адаптив ---------- */
+
+@media (max-width: 640px) {
+  .cover-field {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cover-field__box {
+    max-width: 200px;
+  }
+
+  .songs__row {
+    grid-template-columns: 2rem minmax(0, 1fr) 5rem;
+  }
+
+  .songs__tools {
+    grid-column: 2 / -1;
+    justify-self: end;
+  }
+}

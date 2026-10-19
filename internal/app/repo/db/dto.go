@@ -24,9 +24,8 @@ type streaming struct {
 }
 
 type song struct {
-	ID       uuid.UUID `bson:"_id"`
-	Title    string    `bson:"title"`
-	Duration int       `bson:"duration"`
+	Title    string `bson:"title"`
+	Duration int    `bson:"duration"`
 }
 
 func newAlbum(albumInst *entity.Album) *album {
@@ -45,7 +44,6 @@ func newAlbum(albumInst *entity.Album) *album {
 	}
 	for idx, entitySong := range albumInst.Songs {
 		dto.Songs[idx] = song{
-			ID:       entitySong.ID,
 			Title:    entitySong.Title,
 			Duration: entitySong.Duration,
 		}
@@ -69,7 +67,6 @@ func (a *album) toEntity() *entity.Album {
 	}
 	for idx, entitySong := range a.Songs {
 		inst.Songs[idx] = entity.Song{
-			ID:       entitySong.ID,
 			Title:    entitySong.Title,
 			Duration: entitySong.Duration,
 		}

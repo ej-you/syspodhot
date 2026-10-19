@@ -23,6 +23,9 @@ type ControllerClient struct {
 	concertUC           *usecase.ConcertUC
 	valid               validator.Validator
 	accessCookieBuilder *cookie.Builder
+
+	mediaAlbumURL   string
+	mediaConcertURL string
 }
 
 // NewControllerClient returns a new instance of ControllerClient.
@@ -40,6 +43,8 @@ func NewControllerClient(cfg *config.Config, authUC *usecase.AuthUC, albumUC *us
 			cookie.WithHTTPOnly(cfg.Auth.AccessToken.Cookie.HTTPOnly),
 			cookie.WithSameSite(cfg.Auth.AccessToken.Cookie.SameSite),
 		),
+		mediaAlbumURL:   cfg.Media.AlbumURL,
+		mediaConcertURL: cfg.Media.ConcertURL,
 	}
 }
 
@@ -50,21 +55,22 @@ func (c *ControllerClient) Index(ctx *fiber.Ctx) error {
 		return fmt.Errorf("get all albums: %w", err)
 	}
 
-	concerts, err := c.concertUC.GetComming()
+	concerts, err := c.concertUC.GetComing()
 	if err != nil {
-		return fmt.Errorf("get comming concerts: %w", err)
+		return fmt.Errorf("get coming concerts: %w", err)
 	}
 
 	return ctx.Render("index", fiber.Map{
-		"isAdmin":  ctx.Cookies(_accessTokenCookie) != "",
-		"albums":   albums,
-		"concerts": concerts,
+		"isAdmin":    ctx.Cookies(_accessTokenCookie) != "",
+		"albums":     albums,
+		"concerts":   concerts,
+		"mediaAlbum": c.mediaAlbumURL,
 	})
 }
 
 // Album renders HTML with album page.
 func (c *ControllerClient) Album(ctx *fiber.Ctx) error {
-	inputPath := &albumPath{}
+	inputPath := &idPath{}
 	if err := inputPath.Parse(ctx, c.valid); err != nil {
 		return err
 	}
@@ -78,16 +84,17 @@ func (c *ControllerClient) Album(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Render("album", fiber.Map{
-		"isAdmin": ctx.Cookies(_accessTokenCookie) != "",
-		"album":   album,
+		"isAdmin":    ctx.Cookies(_accessTokenCookie) != "",
+		"album":      album,
+		"mediaAlbum": c.mediaAlbumURL,
 	})
 }
 
 // Concerts renders HTML with concerts page.
 func (c *ControllerClient) Concerts(ctx *fiber.Ctx) error {
-	comming, err := c.concertUC.GetComming()
+	coming, err := c.concertUC.GetComing()
 	if err != nil {
-		return fmt.Errorf("get comming concerts: %w", err)
+		return fmt.Errorf("get coming concerts: %w", err)
 	}
 	past, err := c.concertUC.GetPastGroupedByYear()
 	if err != nil {
@@ -95,9 +102,10 @@ func (c *ControllerClient) Concerts(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Render("concerts", fiber.Map{
-		"isAdmin": ctx.Cookies(_accessTokenCookie) != "",
-		"comming": comming,
-		"past":    past,
+		"isAdmin":      ctx.Cookies(_accessTokenCookie) != "",
+		"coming":       coming,
+		"past":         past,
+		"mediaConcert": c.mediaConcertURL,
 	})
 }
 
@@ -116,7 +124,7 @@ func (c *ControllerClient) AuthAPI(ctx *fiber.Ctx) error {
 	// log in existing user
 	userWithToken, err := c.authUC.LogIn(inputBody.Username, []byte(inputBody.Password))
 	if goerrors.Is(err, errors.ErrInvalidCredentials) {
-		return fiber.NewError(400, "неверный логин или пароль")
+		return fiber.NewError(fiber.StatusBadRequest, "неверный логин или пароль")
 	}
 	if err != nil {
 		return err

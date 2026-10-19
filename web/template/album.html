@@ -78,9 +78,9 @@
         <article class="album release">
           <div class="album__art">
             <span class="album__disc" aria-hidden="true"></span>
-            <!-- TODO: cover from backend -->
-            <img class="album__cover" src="/static/img/album_cover.webp" alt="Обложка альбома «{{ .album.Title }}»"
-              width="3000" height="3000" fetchpriority="high">
+            <img class="album__cover"
+              src="{{ if .album.Photo }}{{ .mediaAlbum }}{{ .album.Photo }}{{ else }}/static/img/default_album_cover.svg{{ end }}"
+              alt="Обложка альбома «{{ .album.Title }}»" width="3000" height="3000" fetchpriority="high">
           </div>
 
           <div class="album__body">

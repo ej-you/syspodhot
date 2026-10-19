@@ -14,8 +14,10 @@ import (
 func (s *Server) registerEndpointsV1(cfg *config.Config, dbStorage *db.DB,
 	valid validator.Validator) {
 
-	// set up static
+	// set up static and media
 	s.fiberApp.Static("/static", "./web/static")
+	s.fiberApp.Static(cfg.Media.AlbumURL, cfg.Media.Album)
+	s.fiberApp.Static(cfg.Media.ConcertURL, cfg.Media.Concert)
 
 	// create repos
 	userRepoDB := repodb.NewUserRepoDB(dbStorage)
@@ -27,7 +29,7 @@ func (s *Server) registerEndpointsV1(cfg *config.Config, dbStorage *db.DB,
 	concertUC := usecase.NewConcertUC(concertRepoDB, cfg.Locale)
 	// create controllers
 	controllerClient := httpv1.NewControllerClient(cfg, authUC, albumUC, concertUC, valid)
-	ControllerAdmin := httpv1.NewControllerAdmin(albumUC, concertUC, valid)
+	ControllerAdmin := httpv1.NewControllerAdmin(cfg, albumUC, concertUC, valid)
 
 	// middlewares
 	alreadyLoggedIn := middleware.AlreadyLoggedIn()

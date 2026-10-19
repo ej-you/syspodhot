@@ -19,7 +19,7 @@ app:
       key: "./build/privateKey.key" # SSL-certificate private key (also used as token secret)
     auth:
       access_token:
-        ttl: 30m # access JWT-token expiration duration
+        ttl: 24h # access JWT-token expiration duration
         cookie:
           path: "/" # cookie path
           secure: true # enable cookie secure if true

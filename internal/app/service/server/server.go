@@ -22,6 +22,8 @@ import (
 	"syspodhot/internal/pkg/validator"
 )
 
+const _bodyLimit = 100 * 1024 * 1024 // 100 MB
+
 // Server represents a HTTP-server.
 type Server struct {
 	cfg      *config.Config
@@ -41,6 +43,7 @@ func New(cfg *config.Config, dbStorage *db.DB, valid validator.Validator) (*Serv
 			ServerHeader:  "Syspodhot",
 			StrictRouting: false,
 			ErrorHandler:  errhandler.CustomErrorHandler,
+			BodyLimit:     _bodyLimit,
 		}),
 		started: make(chan struct{}),
 		exited:  make(chan struct{}),

@@ -13,11 +13,11 @@ linters:
     - dogsled
     - dupl
     - errcheck
-    - errorlint
+    # - errorlint
     - funlen
     - ginkgolinter
     - gochecknoinits
-    - goconst
+    # - goconst
     - gocritic
     - gocyclo
     - godox

@@ -94,6 +94,6 @@ func (u *ConcertUC) Update(concert *entity.Concert) error {
 	return nil
 }
 
-func (u *ConcertUC) Delete(id uuid.UUID) error {
+func (u *ConcertUC) Delete(id uuid.UUID) (*entity.Concert, error) {
 	return u.concertRepoDB.DeleteByID(context.Background(), id) // err OR nil
 }

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if .concert }}Редактирование выступления{{ else }}Новое выступление{{ end }}: Системный Подход</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23120f26'/><circle cx='16' cy='16' r='9' fill='%23f0603f'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/reset.css">
+  <link rel="stylesheet" href="/static/css/index.css">
+  <link rel="stylesheet" href="/static/css/admin.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+
+<body>
+  <a class="skip" href="#main">К содержимому</a>
+
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <div class="site-header__brand">
+        <a class="logo" href="/">Системный Подход</a>
+        <span class="admin-badge" title="Включён админский доступ">Админ</span>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
+        <span></span><span></span>
+      </button>
+      <nav class="nav" id="nav" aria-label="Основное меню">
+        <ul>
+          <li><a href="/concerts">Выступления</a></li>
+          <li><a href="/#music">Музыка</a></li>
+          <li><a href="/#members">Участники</a></li>
+          <li><a href="/#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin" id="main">
+    <div class="wrap">
+      <a class="text-link back" href="/concerts">
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 8H2M7 3L2 8l5 5" />
+        </svg>
+        К выступлениям
+      </a>
+
+      <h1 class="admin__title">{{ if .concert }}Редактирование выступления{{ else }}Новое выступление{{ end }}</h1>
+
+      {{ if .error }}
+      <p class="admin__error" role="alert">{{ .error }}</p>
+      {{ end }}
+
+      <form class="admin-form"
+        action="{{ if .concert }}/admin/concert/{{ .concert.ID }}{{ else }}/admin/concert/new{{ end }}" method="post"
+        enctype="multipart/form-data">
+
+        <section class="form-section">
+          <h2 class="form-section__title">Основное</h2>
+
+          <div class="field">
+            <label class="field__label" for="title">Название</label>
+            <input class="field__input" id="title" name="title" type="text" value="{{ .concert.Title }}" required>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field__label" for="place">Место</label>
+              <input class="field__input" id="place" name="place" type="text" value="{{ .concert.Place }}"
+                placeholder="Ростов-на-Дону, паб «Три тонны»" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="datetime">Дата и время</label>
+            <input class="field__input" id="datetime" name="datetime" type="datetime-local"
+              value='{{ .concert.Datetime.Format "2006-01-02T15:04" }}' required>
+            <p class="field__hint">После этой даты выступление само переедет в прошедшие.</p>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2 class="form-section__title">Ссылки</h2>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field__label" for="ticket_link">Билеты</label>
+              <input class="field__input" id="ticket_link" name="ticket_link" type="url"
+                value="{{ .concert.TicketLink }}" placeholder="https://...">
+              <p class="field__hint">Для предстоящих выступлений.</p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="video">Видео</label>
+              <input class="field__input" id="video" name="video" type="url" value="{{ .concert.Video }}"
+                placeholder="https://vk.ru/... или https://rutube.ru/...">
+              <p class="field__hint">Для прошедших выступлений. Необязательно.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2 class="form-section__title">Фотографии</h2>
+
+          {{ if .concert.Photos }}
+          <div class="field">
+            <p class="field__label">Загруженные</p>
+            <ul class="photos">
+              {{ range $i, $p := .concert.Photos }}
+              <li class="photo">
+                <img class="photo__img" src="{{ $.mediaConcert }}{{ $.concert.PhotosFolder }}/{{ $p }}"
+                  alt="Загруженное фото" loading="lazy">
+                <label class="photo__option photo__delete">
+                  <input type="checkbox" name="delete_photos" value="{{ $p }}">
+                  Удалить
+                </label>
+              </li>
+              {{ end }}
+            </ul>
+            <p class="field__hint">Обложка показывается миниатюрой в списке выступлений. Отмеченные на удаление фото
+              будут удалены после сохранения.</p>
+          </div>
+          {{ end }}
+
+          <div class="field">
+            <p class="field__label">Добавить</p>
+            <div class="uploader">
+              <label class="uploader__drop" for="photos">
+                <span>Перетащите фото сюда или выберите на компьютере</span>
+                <span class="btn btn--edit">Выбрать файлы</span>
+              </label>
+              <input class="sr-only" id="photos" name="photos" type="file"
+                accept="image/jpeg,image/png,image/webp,image/svg+xml" multiple>
+              <ul class="photos photos--new" id="new-photos"></ul>
+            </div>
+            <p class="field__hint">Можно добавлять сколько угодно раз до сохранения. Ненужное фото убирается кнопкой
+              «Убрать» под превью.</p>
+          </div>
+        </section>
+
+        <div class="form-actions">
+          <button class="btn btn--primary" type="submit">Сохранить</button>
+          <a class="text-link" href="/concerts">Отмена</a>
+        </div>
+      </form>
+
+      {{ if .concert }}
+      <section class="danger-zone">
+        <h2 class="form-section__title">Удаление</h2>
+        <p>Выступление будет удалено вместе со всеми фотографиями. Это действие нельзя отменить.</p>
+        <form action="/admin/concert/{{ .concert.ID }}/delete" method="post"
+          data-confirm="Удалить выступление «{{ .concert.Title }}»? Это действие нельзя отменить.">
+          <button class="btn btn--danger" type="submit">Удалить выступление</button>
+        </form>
+      </section>
+      {{ end }}
+    </div>
+  </main>
+
+  <script src="/static/js/index.js"></script>
+  <script src="/static/js/admin.js"></script>
+</body>
+
+</html>

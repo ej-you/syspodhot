@@ -6,6 +6,9 @@ import (
 	"log/slog"
 	"os"
 	"path"
+	"slices"
+	"time"
+	"uuid"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -16,11 +19,14 @@ import (
 	"syspodhot/internal/pkg/validator"
 )
 
+const _dirMode = 0o750
+
 // ControllerAdmin represents an http-controller for admin cases.
 type ControllerAdmin struct {
 	albumUC         *usecase.AlbumUC
 	concertUC       *usecase.ConcertUC
 	valid           validator.Validator
+	locale          *time.Location
 	mediaAlbum      string
 	mediaAlbumURL   string
 	mediaConcert    string
@@ -35,6 +41,7 @@ func NewControllerAdmin(cfg *config.Config, albumUC *usecase.AlbumUC,
 		albumUC:         albumUC,
 		concertUC:       concertUC,
 		valid:           valid,
+		locale:          cfg.Locale,
 		mediaAlbum:      cfg.Media.Album,
 		mediaAlbumURL:   cfg.Media.AlbumURL,
 		mediaConcert:    cfg.Media.Concert,
@@ -96,6 +103,7 @@ func (c *ControllerAdmin) AlbumCreateAPI(ctx *fiber.Ctx) error {
 	}
 
 	if err := c.albumUC.Create(album); err != nil {
+		defer os.Remove(path.Join(c.mediaAlbum, album.Photo)) // remove uploaded file
 		return fmt.Errorf("create album: %w", err)
 	}
 	url := "/album/" + album.ID.String()
@@ -164,10 +172,9 @@ func (c *ControllerAdmin) AlbumDeleteAPI(ctx *fiber.Ctx) error {
 	// remove photo
 	if album.Photo != "" {
 		if err := os.Remove(path.Join(c.mediaAlbum, album.Photo)); err != nil {
-			slog.Error("album edit api", "remove album cover", err)
+			slog.Error("album delete api", "remove album cover", err)
 		}
 	}
-
 	return ctx.Redirect("/#music", fiber.StatusSeeOther)
 }
 
@@ -194,25 +201,108 @@ func (c *ControllerAdmin) ConcertEdit(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Render("admin_concert", fiber.Map{
-		"mode":    "edit",
-		"concert": concert,
+		"mode":         "edit",
+		"concert":      concert,
+		"mediaConcert": c.mediaConcertURL,
 	})
 }
 
 // ConcertCreateAPI creates new concert.
 func (c *ControllerAdmin) ConcertCreateAPI(ctx *fiber.Ctx) error {
-	// TODO: implement
-	panic("unimplemented")
+	photosFolder := uuid.New().String()
+	filesDir := path.Join(c.mediaConcert, photosFolder)
+	// create concert subdir
+	err := os.Mkdir(filesDir, _dirMode)
+	if err != nil && !os.IsExist(err) {
+		return fmt.Errorf("create photos subdir: %w", err)
+	}
+
+	inputBody := &concertBody{}
+	if err := inputBody.Parse(ctx, c.valid, filesDir, c.locale); err != nil {
+		defer os.RemoveAll(filesDir) // remove uploaded files
+		return err
+	}
+
+	concert := &entity.Concert{
+		Title:        inputBody.Title,
+		Place:        inputBody.Place,
+		Datetime:     inputBody.Datetime,
+		TicketLink:   inputBody.TicketLink,
+		PhotosFolder: photosFolder,
+		Photos:       inputBody.Photos,
+		Video:        inputBody.Video,
+	}
+
+	if err := c.concertUC.Create(concert); err != nil {
+		defer os.RemoveAll(filesDir) // remove uploaded files
+		return fmt.Errorf("create concert: %w", err)
+	}
+	return ctx.Redirect("/concerts", fiber.StatusSeeOther)
 }
 
 // ConcertEditAPI saves concert changes.
 func (c *ControllerAdmin) ConcertEditAPI(ctx *fiber.Ctx) error {
-	// TODO: implement
-	panic("unimplemented")
+	inputPath := &idPath{}
+	if err := inputPath.Parse(ctx, c.valid); err != nil {
+		return err
+	}
+	concertOld, err := c.concertUC.Get(inputPath.ID)
+	if err != nil {
+		return fmt.Errorf("get old album data: %w", err)
+	}
+
+	filesDir := path.Join(c.mediaConcert, concertOld.PhotosFolder)
+	inputBody := &concertBody{}
+	if err := inputBody.Parse(ctx, c.valid, filesDir, c.locale); err != nil {
+		return err
+	}
+
+	// remove selected photos
+	for _, photo := range inputBody.DeletePhotos {
+		if err := os.Remove(path.Join(filesDir, photo)); err != nil {
+			slog.Error("concert edit api", "remove photo", err)
+		}
+		// delete filename from slice
+		idx := slices.Index(concertOld.Photos, photo)
+		if idx != -1 {
+			concertOld.Photos = slices.Delete(concertOld.Photos, idx, idx+1)
+		}
+	}
+
+	concert := &entity.Concert{
+		ID:           inputPath.ID,
+		Title:        inputBody.Title,
+		Place:        inputBody.Place,
+		Datetime:     inputBody.Datetime,
+		TicketLink:   inputBody.TicketLink,
+		PhotosFolder: concertOld.PhotosFolder,
+		Photos:       append(concertOld.Photos, inputBody.Photos...),
+		Video:        inputBody.Video,
+	}
+
+	if err := c.concertUC.Update(concert); err != nil {
+		return fmt.Errorf("update concert: %w", err)
+	}
+	return ctx.Redirect("/concerts", fiber.StatusSeeOther)
 }
 
 // ConcertDeleteAPI deletes concert.
 func (c *ControllerAdmin) ConcertDeleteAPI(ctx *fiber.Ctx) error {
-	// TODO: implement
-	panic("unimplemented")
+	inputPath := &idPath{}
+	if err := inputPath.Parse(ctx, c.valid); err != nil {
+		return err
+	}
+
+	// remove record from DB
+	concert, err := c.concertUC.Delete(inputPath.ID)
+	if err != nil {
+		return fmt.Errorf("delete concert: %w", err)
+	}
+	// remove photos folder
+	if len(concert.Photos) != 0 {
+		if err := os.RemoveAll(path.Join(c.mediaConcert, concert.PhotosFolder)); err != nil {
+			slog.Error("concert delete api", "remove concert photos", err)
+		}
+	}
+	return ctx.Redirect("/concerts", fiber.StatusSeeOther)
 }

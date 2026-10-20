@@ -17,8 +17,9 @@ type Concert struct {
 	Datetime   time.Time `json:"datetime"`
 	TicketLink string    `json:"ticket_link"`
 
-	Photos []string `json:"photos"`
-	Video  string   `json:"video"`
+	PhotosFolder string   `json:"photos_folder"`
+	Photos       []string `json:"photos"`
+	Video        string   `json:"video"`
 }
 
 // DatetimeH returns human-readable concert date like "04 июля 2026".

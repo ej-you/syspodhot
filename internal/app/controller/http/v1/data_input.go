@@ -3,7 +3,6 @@ package v1
 import (
 	"errors"
 	"fmt"
-	"log/slog"
 	"regexp"
 	"strconv"
 	"strings"
@@ -17,8 +16,9 @@ import (
 )
 
 const (
-	_fmtDate = "2006-01-02"
-	_minute  = 60
+	_fmtDate     = "2006-01-02"
+	_fmtDatetime = "2006-01-02T15:04"
+	_minute      = 60
 )
 
 var _patternMMSS = regexp.MustCompile(`\d{1,3}:[0-5]\d`)
@@ -85,7 +85,7 @@ type songBody struct {
 	Duration int `form:"-" validate:"-"`
 }
 
-// Parse parses idPath request data and validates it.
+// Parse parses albumBody request data and validates it.
 func (a *albumBody) Parse(ctx *fiber.Ctx, valid validator.Validator, mediaDir string) error {
 	var err error
 
@@ -108,9 +108,6 @@ func (a *albumBody) Parse(ctx *fiber.Ctx, valid validator.Validator, mediaDir st
 	if err := valid.Validate(a); err != nil {
 		return err
 	}
-
-	form, _ := ctx.MultipartForm()
-	slog.Debug("parse album data", "form", form)
 
 	// upload album cover
 	a.Photo, err = utilsfile.UploadAndSaveFile(ctx, "cover", mediaDir)
@@ -136,4 +133,44 @@ func mmssToSeconds(raw string) (int, error) {
 		return 0, fmt.Errorf("parse seconds: %w", err)
 	}
 	return mins*_minute + secs, nil
+}
+
+// concertBody represents a concert data.
+type concertBody struct {
+	Title        string   `form:"title" validate:"required"`
+	Place        string   `form:"place" validate:"required"`
+	DatetimeRaw  string   `form:"datetime" validate:"required"`
+	TicketLink   string   `form:"ticket_link" validate:"omitempty"`
+	Video        string   `form:"video" validate:"omitempty"`
+	DeletePhotos []string `form:"delete_photos" validate:"omitempty"`
+
+	Photos   []string  `form:"-" validate:"-"`
+	Datetime time.Time `form:"-" validate:"-"`
+}
+
+// Parse parses concertBody request data and validates it.
+func (c *concertBody) Parse(ctx *fiber.Ctx, valid validator.Validator,
+	filesDir string, locale *time.Location) error {
+
+	var err error
+
+	if err := ctx.BodyParser(c); err != nil {
+		return fmt.Errorf("parse body: %w", err)
+	}
+	// parse datetime
+	c.Datetime, err = time.ParseInLocation(_fmtDatetime, c.DatetimeRaw, locale)
+	if err != nil {
+		return fmt.Errorf("%w: parse datetime: %v", validator.ErrValidate, err)
+	}
+	// validate parsed data
+	if err := valid.Validate(c); err != nil {
+		return err
+	}
+
+	// upload concert photos
+	c.Photos, err = utilsfile.UploadAndSaveFiles(ctx, "photos", filesDir)
+	if err != nil {
+		return fmt.Errorf("upload and save photos: %w", err)
+	}
+	return nil
 }

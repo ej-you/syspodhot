@@ -83,11 +83,11 @@
           <h2 class="section__title" id="upcoming-title">Предстоящие</h2>
         </div>
 
-        {{ if eq (len .comming) 0 }}
+        {{ if not .coming }}
         <p class="empty">Пока ничего не запланировано. Следите за новостями</p>
         {{ else }}
         <ul class="tickets">
-          {{ range .comming }}
+          {{ range .coming }}
           <li class="ticket">
             <time class="ticket__date" datetime="{{ .Datetime }}">
               <span class="ticket__day">{{ .Day }}</span>
@@ -126,41 +126,42 @@
         <div class="year-group">
           <h3 class="year-group__title">{{ .Year }}</h3>
           <ul class="shows">
-            {{ range .Concerts }}
+            {{ range $i, $c := .Concerts }}
             <li class="show show--media">
-              {{ if ne (len .Photos) 0 }}
+              {{ if $c.Photos }}
               <div class="show__photos" data-title="{{ .Title }}">
-                <!-- TODO: photos from backend -->
-                <a class="show__cover" href="/static/img/concerts/photo-01.svg" data-gallery="show-1">
-                  <img src="/static/img/concerts/photo-01.svg" alt="Фото с выступления: {{ .Title }}" width="1500"
-                    height="1000" loading="lazy">
-                  <span class="show__count">{{ len .Photos }} фото</span>
+                <a class="show__cover" href="{{ $.mediaConcert }}{{ $c.PhotosFolder }}/{{ index $c.Photos 0 }}"
+                  data-gallery="show-{{ $i }}">
+                  <img src="{{ $.mediaConcert }}{{ $c.PhotosFolder }}/{{ index $c.Photos 0 }}"
+                    alt="Фото с выступления: {{ .Title }}" width="1500" height="1000" loading="lazy">
+                  <span class="show__count">{{ len $c.Photos }} фото</span>
                 </a>
                 <!-- Остальные фото: ссылки скрыты, открываются в галерее по клику на обложку -->
-                <a href="/static/img/concerts/photo-02.svg" data-gallery="show-1" hidden>Фото 2</a>
-                <a href="/static/img/concerts/photo-03.svg" data-gallery="show-1" hidden>Фото 3</a>
-                <a href="/static/img/concerts/photo-04.svg" data-gallery="show-1" hidden>Фото 4</a>
-                <a href="/static/img/concerts/photo-05.svg" data-gallery="show-1" hidden>Фото 5</a>
-                <a href="/static/img/concerts/photo-06.svg" data-gallery="show-1" hidden>Фото 6</a>
-                <a href="/static/img/concerts/photo-07.svg" data-gallery="show-1" hidden>Фото 7</a>
-                <a href="/static/img/concerts/photo-08.svg" data-gallery="show-1" hidden>Фото 8</a>
+                {{ range $j, $photo := $c.Photos }}
+                {{ if ne $j 0 }}
+                <a href="{{ $.mediaConcert }}{{ $c.PhotosFolder }}/{{ $photo }}" data-gallery="show-{{ $i }}"
+                  hidden>Фото
+                  {{ $j }}</a>
+                {{ end }}
+                {{ end }}
               </div>
               {{ end }}
               <div class="show__body">
-                <time class="show__date">{{ .DatetimeH }}</time>
-                <h4 class="show__title">{{ .Title }}</h4>
-                <p class="show__place">{{ .Place }}</p>
+                <time class="show__date">{{ $c.DatetimeH }}</time>
+                <h4 class="show__title">{{ $c.Title }}</h4>
+                <p class="show__place">{{ $c.Place }}</p>
                 <div class="show__actions">
-                  {{ if .Video }}
-                  <a class="btn btn--video" href="{{ .Video }}"><svg viewBox="0 0 16 16" width="14" height="14"
+                  {{ if $c.Video }}
+                  <a class="btn btn--video" href="{{ $c.Video }}"><svg viewBox="0 0 16 16" width="14" height="14"
                       fill="currentColor" aria-hidden="true">
                       <path d="M4 2.5v11l9.5-5.5z" />
                     </svg>Смотреть видео</a>
                   {{ end }}
                   {{ if $.isAdmin }}
-                  <a class="btn btn--edit" href="/admin/concert/{{ .ID }}" aria-label="Редактировать: {{ .Title }}"><svg
-                      viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <a class="btn btn--edit" href="/admin/concert/{{ $c.ID }}"
+                    aria-label="Редактировать: {{ $c.Title }}"><svg viewBox="0 0 24 24" width="16" height="16"
+                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      aria-hidden="true">
                       <path d="M12 20h9" />
                       <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
                     </svg>Редактировать</a>

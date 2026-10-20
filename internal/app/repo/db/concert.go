@@ -112,7 +112,7 @@ func (r *ConcertRepoDB) UpdateFull(ctx context.Context, concert *entity.Concert)
 }
 
 // DeleteByID deletes concert with given ID.
-func (r *ConcertRepoDB) DeleteByID(ctx context.Context, id uuid.UUID) error {
+func (r *ConcertRepoDB) DeleteByID(ctx context.Context, id uuid.UUID) (*entity.Concert, error) {
 	concert := &concert{}
 
 	err := r.dbStorage.
@@ -120,7 +120,7 @@ func (r *ConcertRepoDB) DeleteByID(ctx context.Context, id uuid.UUID) error {
 		FindOneAndDelete(ctx, bson.M{_idField: id}).
 		Decode(concert)
 	if goerrors.Is(err, mongo.ErrNoDocuments) {
-		return errors.ErrNotFound
+		return nil, errors.ErrNotFound
 	}
-	return err // err OR nil
+	return concert.toEntity(), err // err OR nil
 }

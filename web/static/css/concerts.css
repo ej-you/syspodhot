@@ -236,6 +236,14 @@ body:has(.lightbox[open]) {
 /* ---------- Адаптив ---------- */
 
 @media (max-width: 640px) {
+  .page-head__title {
+    font: 700 clamp(1.4rem, 6vw, 4.5rem)/1.05 var(--font-display);
+  }
+
+  .section__title {
+    font: 700 clamp(1.2rem, 4vw, 3rem) / 1.1 var(--font-display);
+  }
+
   .show--media {
     grid-template-columns: minmax(0, 1fr);
   }

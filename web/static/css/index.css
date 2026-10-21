@@ -267,7 +267,7 @@ a {
   .hero__img {
     aspect-ratio: 16 / 10;
     max-height: calc(100svh - var(--header-h) - 4rem);
-    object-position: center 10%;
+    object-position: center 25%;
   }
 }
 
@@ -725,6 +725,16 @@ a {
   }
 }
 
+@media (max-width: 950px) {
+  #concerts-link {
+    color: var(--accent);
+  }
+
+  #concerts-link:hover {
+    text-decoration: underline;
+  }
+}
+
 @media (max-width: 750px) {
   .ticket {
     --stub: 6.5rem;
@@ -760,6 +770,10 @@ a {
 
   .btn {
     font: 600 0.8rem/1.2 var(--font-body);
+  }
+
+  .section {
+    padding-block: clamp(2.5rem, 8vw, 7rem);
   }
 
   .section__title {

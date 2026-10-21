@@ -22,8 +22,11 @@
   <header class="site-header">
     <div class="wrap site-header__inner">
       <div class="site-header__brand">
+        {{ if .isAdmin }}
+        <a class="logo admin-badge" href="/">Системный Админ</a>
+        {{ else }}
         <a class="logo" href="/">Системный Подход</a>
-        <span class="admin-badge" title="Включён админский доступ">Админ</span>
+        {{ end }}
       </div>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
         <span></span><span></span>

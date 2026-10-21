@@ -163,7 +163,7 @@ a {
 }
 
 .logo {
-  font: 700 clamp(0.95rem, 3.6vw, 1.125rem)/1 var(--font-display);
+  font: 700 clamp(0.8rem, 3.6vw, 1.125rem)/1 var(--font-display);
   letter-spacing: -0.01em;
   text-decoration: none;
 }
@@ -181,10 +181,6 @@ a {
   border: 1.5px solid var(--accent);
   border-radius: 999px;
   color: var(--accent);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  line-height: 1;
-  white-space: nowrap;
 }
 
 .nav ul {
@@ -572,46 +568,6 @@ a {
   color: var(--label);
 }
 
-/* Вместо фото: абстрактная «пластинка» с инициалами.
-   Вариант плитки зависит от порядка в списке, данных для него не нужно. */
-/* .member__art {
-  --tile: #241a4a;
-  --ring: #33286b;
-  --label: var(--accent);
-  --cx: 50%;
-  --cy: 46%;
-  position: relative;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 2px;
-  background: var(--tile);
-} */
-
-/* Бороздки */
-/* .member__art::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-radial-gradient(circle at var(--cx) var(--cy), transparent 0 9px, var(--ring) 9px 11px);
-} */
-
-/* Этикетка с инициалами */
-/* .member__label {
-  position: absolute;
-  left: var(--cx);
-  top: var(--cy);
-  display: grid;
-  place-items: center;
-  width: 38%;
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: var(--label);
-  color: var(--ink);
-  font: 700 clamp(1rem, 2.4vw, 1.5rem)/1 var(--font-display);
-  letter-spacing: -0.02em;
-} */
-
 .member:nth-child(6n + 2) .member__art {
   --tile: #2a1830;
   --ring: #3d2240;
@@ -737,7 +693,7 @@ a {
 
 /* ---------- Адаптив ---------- */
 
-@media (max-width: 860px) {
+@media (max-width: 1150px) {
   .nav-toggle {
     display: block;
   }
@@ -769,12 +725,7 @@ a {
   }
 }
 
-@media (max-width: 640px) {
-  .album {
-    --size: min(60vw, 260px);
-    grid-template-columns: 1fr;
-  }
-
+@media (max-width: 750px) {
   .ticket {
     --stub: 6.5rem;
     grid-template-columns: var(--stub) minmax(0, 1fr);
@@ -790,7 +741,115 @@ a {
 
   .ticket__buy {
     grid-column: 2;
-    justify-self: start;
+    justify-self: stretch;
+    margin: 0 1.25rem 1.25rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .site-footer__inner {
+    justify-content: space-around;
+  }
+}
+
+@media (max-width: 640px) {
+  .album {
+    --size: min(60vw, 260px);
+    grid-template-columns: 1fr;
+  }
+
+  .btn {
+    font: 600 0.8rem/1.2 var(--font-body);
+  }
+
+  .section__title {
+    font: 700 clamp(1.5rem, 4vw, 3rem)/1.1 var(--font-display);
+  }
+
+  .contacts__note {
+    font-size: 1rem;
+  }
+
+  .contacts__mail {
+    font: 700 clamp(1rem, 4.5vw, 3.25rem)/1.15 var(--font-display);
+  }
+
+  .site-footer__links {
+    gap: 0.3rem 0.8rem;
+  }
+}
+
+@media (max-width: 450px) {
+  .ticket {
+    --stub: 5rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Вырезы переезжают на боковые края, на линию отрыва */
+  .ticket::before,
+  .ticket::after {
+    top: calc(var(--stub) - var(--notch) / 2);
+    bottom: auto;
+  }
+
+  .ticket::before {
+    left: calc(var(--notch) / -2);
+  }
+
+  .ticket::after {
+    left: auto;
+    right: calc(var(--notch) / -2);
+  }
+
+  .ticket__date {
+    grid-row: auto;
+    height: var(--stub);
+
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 0.5rem;
+
+    justify-content: center;
+    align-content: center;
+    align-items: baseline;
+    text-align: center;
+
+    padding: 0 1.25rem;
+    border-radius: 6px 6px 0 0;
+  }
+
+  /* Линия отрыва: горизонтальная, по нижнему краю даты */
+  .ticket__date::after {
+    top: auto;
+    bottom: 0;
+    left: 1.25rem;
+    right: 1.25rem;
+    border-right: 0;
+    border-bottom: 2px dashed var(--ink);
+  }
+
+  .ticket__day {
+    font-size: 2.25rem;
+  }
+
+  .ticket__month {
+    margin-top: 0;
+    font-size: 1.125rem;
+  }
+
+  .ticket__weekday {
+    grid-column: 1 / -1;
+    margin-top: 0.1rem;
+    line-height: 1.2;
+  }
+
+  .ticket__main {
+    padding: 1rem 1.25rem 0.75rem;
+  }
+
+  .ticket__buy {
+    grid-column: 1;
+    justify-self: stretch;
     margin: 0 1.25rem 1.25rem;
   }
 }

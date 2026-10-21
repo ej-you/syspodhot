@@ -97,14 +97,34 @@
 
 /* ---------- Адаптив ---------- */
 
-@media (max-width: 640px) {
+@media (max-width: 850px) {
+  .album {
+    --size: min(60vw, 260px);
+    grid-template-columns: 1fr;
+  }
+
   /* Коробка с пластинкой шире обложки на 30%, поэтому размер считаем от ширины экрана */
   .release {
     --size: min(calc((100vw - 2 * var(--pad)) / 1.3), 340px);
   }
 
+  .album__title {
+    font-size: clamp(1.5rem, 5vw, 4rem);
+  }
+
+  .release__tagline {
+    font-size: 1.1rem;
+  }
+
   .track {
     grid-template-columns: 2rem minmax(0, 1fr) auto;
     gap: 0.75rem;
+    padding-block: 0.7rem;
+  }
+
+  .track::before,
+  .track__title,
+  .track__time {
+    font-size: 0.9rem;
   }
 }

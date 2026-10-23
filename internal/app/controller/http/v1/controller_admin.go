@@ -248,7 +248,7 @@ func (c *ControllerAdmin) ConcertEditAPI(ctx *fiber.Ctx) error {
 	}
 	concertOld, err := c.concertUC.Get(inputPath.ID)
 	if err != nil {
-		return fmt.Errorf("get old album data: %w", err)
+		return fmt.Errorf("get old concert data: %w", err)
 	}
 
 	filesDir := path.Join(c.mediaConcert, concertOld.PhotosFolder)

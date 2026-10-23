@@ -254,7 +254,6 @@ a {
 .hero__img {
   width: 100%;
   height: auto;
-  aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 4px;
   box-shadow:
@@ -267,7 +266,7 @@ a {
   .hero__img {
     aspect-ratio: 16 / 10;
     max-height: calc(100svh - var(--header-h) - 4rem);
-    object-position: center 25%;
+    object-position: center 55%;
   }
 }
 

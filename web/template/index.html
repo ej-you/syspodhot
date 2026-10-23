@@ -59,13 +59,13 @@
 
     <section class="section" id="concerts" aria-labelledby="concerts-title">
       <div class="wrap">
-        <div class="section__head">
+        <div class="section__head" id="concerts-section">
           <h2 class="section__title" id="concerts-title">Ближайшие выступления</h2>
-          <a class="text-link" id="concerts-link" href="/concerts">Все выступления</a>
+          <a class="text-link" href="/concerts">Все выступления</a>
         </div>
 
         {{ if eq (len .concerts) 0 }}
-        <h3 class="tickets--empty">Следите за новостями</h3>
+        <p class="tickets--empty">Пока ничего не запланировано. Следите за новостями</p>
         {{ else }}
         <ul class="tickets">
           {{ range .concerts }}

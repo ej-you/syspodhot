@@ -1,0 +1,28 @@
+services:
+  mongo:
+    image: mongo:9.0.2-noble
+    container_name: syspodhot_mongo
+    restart: always
+    expose:
+      - "27017"
+    networks:
+      main_network:
+
+  server:
+    build:
+      context: .
+      dockerfile: ./build/Dockerfile
+    container_name: syspodhot_server
+    restart: always
+    ports:
+      - "443:443"
+    volumes:
+      - ./backend/config.yml:/app/config.yml:ro
+    networks:
+      main_network:
+    depends_on:
+      - mongo
+
+networks:
+  main_network:
+    driver: bridge

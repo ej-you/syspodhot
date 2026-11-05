@@ -1,21 +1,21 @@
 db:
-  name: "syspodhot_test" # db name
-  host: "127.0.0.1" # db host
-  port: 27027 # db port
+  name: "syspodhot_test" # "syspodhot" # db name
+  host: "127.0.0.1" # "mongo" # db host
+  port: 27027 # "27017" # db port
 
 app:
   locale: "Europe/Moscow" # local time zone name
   logging:
-    log_level: 1 # 1 - debug, 2 - info (default), 3 - warn, 4 - error, 5 - silent
+    log_level: 2 # 1 - debug, 2 - info (default), 3 - warn, 4 - error, 5 - silent
     log_format: "json" # ("json", "text") set log format
   media:
     album: "./media/album/" # path to dir with album covers
     concert: "./media/concert/" # path to dir with concert photos
   server:
-    port: 8080 # port for HTTP-server
+    port: 443 # port for HTTP-server
     shutdown_timeout: 1s # timeout to force shutdown server after receiving an OS signal
     ssl:
-      #cert: "./build/certificate.crt" # SSL-certificate file
+      cert: "./build/certificate.crt" # SSL-certificate file
       key: "./build/privateKey.key" # SSL-certificate private key (also used as token secret)
     auth:
       access_token:

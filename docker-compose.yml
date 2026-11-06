@@ -17,7 +17,7 @@ services:
     expose:
       - "8000"
     volumes:
-      - ./backend/config.yml:/app/config.yml:ro
+      - ./config.yml:/app/config.yml:ro
     networks:
       main_network:
     depends_on:

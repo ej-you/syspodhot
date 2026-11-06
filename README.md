@@ -8,6 +8,12 @@
 
 ## Запуск и настройка
 
+Перед запуском нужно выпустить SSL-сертификат для использования в качестве секрета для токена авторизации:
+
+```shell
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout ./build/privateKey.key -out ./build/certificate.crt
+```
+
 После настройки можно запустить приложение. Для этого используется `docker compose`:
 
 ```shell

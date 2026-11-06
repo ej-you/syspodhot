@@ -144,11 +144,11 @@ func New() (*Config, error) {
 	cfg.Media.AlbumURL = filepathToURL(cfg.Media.Album)
 	cfg.Media.ConcertURL = filepathToURL(cfg.Media.Concert)
 	// create media dirs if are not exist
-	err = os.Mkdir(cfg.Media.Album, _dirMode)
+	err = os.MkdirAll(cfg.Media.Album, _dirMode)
 	if err != nil && !os.IsExist(err) {
 		return nil, fmt.Errorf("create media album dir: %w", err)
 	}
-	err = os.Mkdir(cfg.Media.Concert, _dirMode)
+	err = os.MkdirAll(cfg.Media.Concert, _dirMode)
 	if err != nil && !os.IsExist(err) {
 		return nil, fmt.Errorf("create media concert dir: %w", err)
 	}

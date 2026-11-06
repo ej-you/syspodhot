@@ -14,8 +14,8 @@ services:
       dockerfile: ./build/Dockerfile
     container_name: syspodhot_server
     restart: always
-    ports:
-      - "443:443"
+    expose:
+      - "8000"
     volumes:
       - ./backend/config.yml:/app/config.yml:ro
     networks:
@@ -23,6 +23,40 @@ services:
     depends_on:
       - mongo
 
+  web-server:
+    build:
+      context: .
+      dockerfile: ./web-server/Dockerfile
+    container_name: syspodhot_webserver
+    restart: always
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - certbot-www:/var/www/certbot/:ro
+      - certbot-conf:/etc/nginx/ssl/:ro
+    networks:
+      main_network:
+    depends_on:
+      - server
+
+  certbot:
+    image: certbot/certbot
+    container_name: syspodhot_certbot
+    volumes:
+      - certbot-www:/var/www/certbot/:rw
+      - certbot-conf:/etc/letsencrypt/:rw
+    # remove flag "--staging" to make real SSL (not for tests)
+    command: certonly --staging --webroot --webroot-path=/var/www/certbot/ --agree-tos -d syspodhot.ru -d www.syspodhot.ru
+    networks:
+      main_network:
+    depends_on:
+      - web-server
+
 networks:
   main_network:
     driver: bridge
+
+volumes:
+  certbot-www:
+  certbot-conf:

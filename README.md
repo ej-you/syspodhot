@@ -26,6 +26,45 @@ docker compose ps
 docker compose down
 ```
 
+## Настройка автообновления SSL-сертификата
+
+Переходим в контейнер с веб-сервером:
+
+```shell
+docker compose exec -it web-server sh
+```
+
+Раскомментируем `#include /etc/nginx/conf.d/https-site.conf;` в файле `/etc/nginx/nginx.conf`:
+
+```shell
+vi /etc/nginx/nginx.conf
+```
+
+Проверим конфиг nginx и перечитаем его:
+
+```shell
+nginx -t
+nginx -s reload
+```
+
+Выйдем из контейнера `web-server`:
+
+```shell
+exit
+```
+
+Удалим контейнер `certbot`:
+
+```shell
+docker compose rm certbot
+```
+
+Для автообновления сертификата настроим задачу в `cron` (раз в месяц):
+
+```shell
+0 0 1 */1 * docker-compose -f /full/path/to/docker-compose.yml run --rm certbot renew --force-renewal
+```
+
 ## Администрирование
 
 Для управления пользователями используется менеджер:

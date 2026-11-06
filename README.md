@@ -68,7 +68,7 @@ docker compose rm certbot
 Для автообновления сертификата настроим задачу в `cron` (раз в месяц):
 
 ```shell
-0 0 1 */1 * docker-compose -f /full/path/to/docker-compose.yml run --rm certbot renew --force-renewal
+0 0 1 */1 * docker compose -f /full/path/to/docker-compose.yml run --rm certbot renew --force-renewal
 ```
 
 ## Администрирование

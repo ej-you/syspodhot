@@ -18,6 +18,7 @@ services:
       - "8000"
     volumes:
       - ./config.yml:/app/config.yml:ro
+      - ./build/privateKey.key:/app/build/privateKey.key:ro
     networks:
       main_network:
     depends_on:
